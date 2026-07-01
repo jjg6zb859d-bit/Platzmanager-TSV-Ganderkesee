@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
 <header>
@@ -19,40 +20,37 @@
 <div class="container">
 
     <div class="card">
-        <h2>Plätze</h2>
 
-        <div class="platz frei">
-            Hauptplatz - Frei
-        </div>
+        <h2>Neue Reservierung</h2>
 
-        <div class="platz belegt">
-            Kunstrasen - Belegt
-        </div>
+        <input type="date" id="datum">
 
-        <div class="platz frei">
-            Trainingsplatz - Frei
-        </div>
+        <select id="team">
+            <option>D1</option>
+            <option>D2</option>
+            <option>C1</option>
+            <option>C2</option>
+            <option>Herren</option>
+        </select>
 
-        <div class="platz gesperrt">
-            Jugendplatz - Gesperrt
-        </div>
+        <select id="platz">
+            <option>Hauptplatz</option>
+            <option>Kunstrasen</option>
+            <option>Trainingsplatz</option>
+            <option>Jugendplatz</option>
+        </select>
+
+        <button onclick="speichern()">
+            Reservieren
+        </button>
 
     </div>
 
     <div class="card">
-        <h2>Kabinen</h2>
 
-        <div class="kabine">
-            Kabine 1
-        </div>
+        <h2>Reservierungen</h2>
 
-        <div class="kabine">
-            Kabine 2
-        </div>
-
-        <div class="kabine">
-            Kabine 3
-        </div>
+        <div id="liste"></div>
 
     </div>
 
@@ -65,13 +63,5 @@
 ⚽ TSV Ganderkesee
 Digitaler Platz- und Kabinenplan
 
-Plätze
-Hauptplatz - Frei
-Kunstrasen - Belegt
-Trainingsplatz - Frei
-Jugendplatz - Gesperrt
-Kabinen
-Kabine 1
-Kabine 2
-Kabine 3
-
+Neue Reservierung
+Reservierungen
