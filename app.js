@@ -10,21 +10,61 @@ function speichern(){
     const datum =
     document.getElementById("datum").value;
 
+    const start =
+    document.getElementById("start").value;
+
+    const ende =
+    document.getElementById("ende").value;
+
     const team =
     document.getElementById("team").value;
 
     const platz =
     document.getElementById("platz").value;
 
-    if(!datum){
-        alert("Datum auswählen");
+    const kabine =
+    document.getElementById("kabine").value;
+
+    if(!datum || !start || !ende){
+
+        alert("Datum und Uhrzeit wählen");
+
+        return;
+    }
+
+    const konflikt =
+    reservierungen.find(r =>
+
+        r.datum === datum &&
+
+        (
+            r.platz === platz ||
+            r.kabine === kabine ||
+            r.team === team
+        )
+
+    );
+
+    if(konflikt){
+
+        alert(
+            "Konflikt erkannt:\n" +
+            konflikt.team +
+            " hat bereits eine Reservierung."
+        );
+
         return;
     }
 
     reservierungen.push({
+
         datum,
+        start,
+        ende,
         team,
-        platz
+        platz,
+        kabine
+
     });
 
     localStorage.setItem(
@@ -45,28 +85,39 @@ function anzeigen(){
     reservierungen.forEach((r,index)=>{
 
         liste.innerHTML += `
-        <div class="eintrag">
 
-            <strong>${r.team}</strong>
+<div class="eintrag">
 
-            <br>
+<strong>${r.team}</strong>
 
-            ${r.datum}
+<br>
 
-            <br>
+📅 ${r.datum}
 
-            ${r.platz}
+<br>
 
-            <br><br>
+⏰ ${r.start} - ${r.ende}
 
-            <button onclick="loeschen(${index})">
+<br>
 
-                Löschen
+⚽ ${r.platz}
 
-            </button>
+<br>
 
-        </div>
-        `;
+🚪 ${r.kabine}
+
+<br><br>
+
+<button onclick="loeschen(${index})">
+
+Löschen
+
+</button>
+
+</div>
+
+`;
+
     });
 }
 
