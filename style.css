@@ -1,0 +1,43 @@
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f5f5f5;
+}
+
+header{
+    background:#0054A6;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+.container{
+    padding:15px;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.platz,
+.kabine{
+    padding:10px;
+    margin:5px 0;
+    border-radius:5px;
+}
+
+.frei{
+    background:#C8F7C5;
+}
+
+.belegt{
+    background:#FFE082;
+}
+
+.gesperrt{
+    background:#FFCDD2;
+}
