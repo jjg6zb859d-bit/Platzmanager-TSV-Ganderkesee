@@ -68,3 +68,6 @@ button:hover{
     background:#f1f1f1;
     border-radius:5px;
 }
+.eintrag{
+    border-left:5px solid #0054A6;
+}
