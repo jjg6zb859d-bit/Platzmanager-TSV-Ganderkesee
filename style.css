@@ -41,3 +41,30 @@ header{
 .gesperrt{
     background:#FFCDD2;
 }
+input,
+select,
+button{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    box-sizing:border-box;
+}
+
+button{
+    background:#0054A6;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#003f7f;
+}
+
+.eintrag{
+    padding:10px;
+    margin-bottom:8px;
+    background:#f1f1f1;
+    border-radius:5px;
+}
