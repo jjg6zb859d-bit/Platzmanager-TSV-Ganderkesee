@@ -1,51 +1,31 @@
-function initPlaetze() {
-    renderPlaetze();
-}
+function initPlaetze(){
 
-function renderPlaetze() {
+const div =
+document.getElementById(
+"platzMatrix"
+);
 
-    const div =
-        document.getElementById("platzMatrix");
+let html =
+'<div class="grid">';
 
-    let html =
-        '<div class="grid">';
+APPDATA.plaetze.forEach(p=>{
 
-    APPDATA.plaetze.forEach(platz => {
+html += `
 
-        const belegt =
-            APPDATA.reservierungen.filter(
-                r => r.platz === platz.name
-            );
+<div class="card frei">
 
-        let status = "frei";
-        let css = "status-frei";
+<h3>${p.name}</h3>
 
-        if (belegt.length > 0) {
+frei
 
-            status =
-                `${belegt.length} Belegung(en)`;
+</div>
 
-            css =
-                "status-belegt";
-        }
+`;
 
-        html += `
+});
 
-        <div class="card ${css}">
+html += '</div>';
 
-            <h3>
-                ${platz.name}
-            </h3>
+div.innerHTML = html;
 
-            <strong>${status}</strong>
-
-        </div>
-
-        `;
-    });
-
-    html += "</div>";
-
-    div.innerHTML =
-        html;
 }
