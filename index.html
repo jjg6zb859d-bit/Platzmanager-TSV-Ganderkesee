@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TSV PlatzManager V0.6</title>
+<title>TSV PlatzManager V0.7</title>
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,7 @@
 
 <header>
     <h1>⚽ TSV Ganderkesee</h1>
-    <p>Digitaler Platz- und Kabinenbelegungsplan V0.6</p>
+    <p>Digitaler Platz- und Kabinenbelegungsplan V0.7</p>
 </header>
 
 <main class="container">
@@ -46,7 +46,7 @@
     </section>
 
     <section class="card">
-        <h2>Neue Reservierung</h2>
+        <h2 id="formularTitel">Neue Reservierung</h2>
 
         <label>Datum</label>
         <input type="date" id="datum">
@@ -79,9 +79,22 @@
             id="notiz"
             placeholder="z. B. Testspiel, Platzpflege, Turnier, Gastmannschaft"></textarea>
 
-        <button onclick="speichern()">
+        <button id="speicherButton" onclick="speichern()">
             Reservierung speichern
         </button>
+
+        <button id="abbrechenButton" class="secondary hidden" onclick="bearbeitungAbbrechen()">
+            Bearbeitung abbrechen
+        </button>
+    </section>
+
+    <section class="card">
+        <h2>Tagesansicht / Platzmatrix</h2>
+
+        <label>Tag auswählen</label>
+        <input type="date" id="tagesDatum" onchange="aktualisieren()">
+
+        <div id="tagesplan" class="tagesplan"></div>
     </section>
 
     <section class="card">
@@ -91,6 +104,24 @@
         <input type="date" id="wochenDatum" onchange="aktualisieren()">
 
         <div id="wochenplan" class="wochenplan"></div>
+    </section>
+
+    <section class="card">
+        <h2>Filter</h2>
+
+        <label>Team filtern</label>
+        <select id="filterTeam" onchange="anzeigen()">
+            <option>Alle Teams</option>
+        </select>
+
+        <label>Status filtern</label>
+        <select id="filterStatus" onchange="anzeigen()">
+            <option>Alle Status</option>
+            <option>Entwurf</option>
+            <option>Reserviert</option>
+            <option>Freigegeben</option>
+            <option>Gesperrt</option>
+        </select>
     </section>
 
     <section class="card">
