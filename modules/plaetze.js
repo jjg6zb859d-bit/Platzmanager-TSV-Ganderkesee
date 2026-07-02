@@ -1,31 +1,42 @@
 function initPlaetze(){
 
-const div =
-document.getElementById(
-"platzMatrix"
-);
+    renderPlaetze();
 
-let html =
-'<div class="grid">';
+}
 
-APPDATA.plaetze.forEach(p=>{
+function renderPlaetze(){
 
-html += `
+    const div =
+    document.getElementById(
+        "platzMatrix"
+    );
 
-<div class="card status-frei">
+    let html =
+    '<div class="grid">';
 
-<h3>${p}</h3>
+    APPDATA.plaetze.forEach(platz=>{
 
-frei
+        html += `
 
-</div>
+        <div class="card status-frei">
 
-`;
+            <h3>
 
-});
+            ${platz.name}
 
-html += '</div>';
+            </h3>
 
-div.innerHTML = html;
+            ${platz.status}
+
+        </div>
+
+        `;
+
+    });
+
+    html += "</div>";
+
+    div.innerHTML =
+    html;
 
 }
