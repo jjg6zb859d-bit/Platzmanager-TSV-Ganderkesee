@@ -95,9 +95,13 @@ button.danger:hover {
     background: #8e0000;
 }
 
+.hidden {
+    display: none;
+}
+
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
 }
 
@@ -194,10 +198,21 @@ button.danger:hover {
     border-left: 8px solid #000;
 }
 
+.button-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+}
+
 .loeschen {
     background: white;
     color: black;
-    margin-top: 10px;
+}
+
+.bearbeiten {
+    background: #FFB300;
+    color: black;
 }
 
 .admin-hinweis {
@@ -251,8 +266,44 @@ button.danger:hover {
     font-size: 13px;
 }
 
+.tagesplan {
+    margin-top: 15px;
+}
+
+.platzmatrix {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.platzbox {
+    background: #f8f9fb;
+    border-radius: 10px;
+    padding: 10px;
+    border-left: 5px solid #0054A6;
+    min-height: 100px;
+}
+
+.platzbox h3 {
+    margin: 0 0 8px 0;
+    color: #0054A6;
+    font-size: 15px;
+}
+
+.platz-eintrag {
+    color: white;
+    border-radius: 6px;
+    padding: 7px;
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
 @media (max-width: 1000px) {
     .wochenplan {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .platzmatrix {
         grid-template-columns: repeat(2, 1fr);
     }
 
@@ -262,11 +313,16 @@ button.danger:hover {
 }
 
 @media (max-width: 600px) {
-    .wochenplan {
+    .wochenplan,
+    .platzmatrix {
         grid-template-columns: 1fr;
     }
 
     .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-row {
         grid-template-columns: 1fr;
     }
 
