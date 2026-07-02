@@ -1,7 +1,5 @@
 function initReservierungen() {
-
     renderReservierungen();
-
 }
 
 function renderReservierungen() {
@@ -22,9 +20,7 @@ function renderReservierungen() {
         <select id="resTeam">
 
             ${APPDATA.teams.map(team =>
-
                 `<option>${team.name}</option>`
-
             ).join("")}
 
         </select>
@@ -35,13 +31,13 @@ function renderReservierungen() {
             type="date"
             id="resDatum">
 
-        <label>Start</label>
+        <label>Startzeit</label>
 
         <input
             type="time"
             id="resStart">
 
-        <label>Ende</label>
+        <label>Endzeit</label>
 
         <input
             type="time"
@@ -52,9 +48,7 @@ function renderReservierungen() {
         <select id="resPlatz">
 
             ${APPDATA.plaetze.map(platz =>
-
                 `<option>${platz.name}</option>`
-
             ).join("")}
 
         </select>
@@ -64,17 +58,13 @@ function renderReservierungen() {
         <select id="resKabine">
 
             ${APPDATA.kabinen.map(kabine =>
-
                 `<option>${kabine.name}</option>`
-
             ).join("")}
 
         </select>
 
         <button onclick="reservierungSpeichern()">
-
             Reservierung speichern
-
         </button>
 
     </div>
@@ -118,91 +108,31 @@ function renderReservierungen() {
     html += `</div>`;
 
     div.innerHTML = html;
+}
 
-   function reservierungSpeichern() {
+function reservierungSpeichern() {
 
     const team =
-        document.getElementById(
-            "resTeam"
-        ).value;
+        document.getElementById("resTeam").value;
 
     const datum =
-        document.getElementById(
-            "resDatum"
-        ).value;
+        document.getElementById("resDatum").value;
 
     const start =
-        document.getElementById(
-            "resStart"
-        ).value;
+        document.getElementById("resStart").value;
 
     const ende =
-        document.getElementById(
-            "resEnde"
-        ).value;
+        document.getElementById("resEnde").value;
 
     const platz =
-        document.getElementById(
-            "resPlatz"
-        ).value;
+        document.getElementById("resPlatz").value;
 
     const kabine =
-        document.getElementById(
-            "resKabine"
-        ).value;
+        document.getElementById("resKabine").value;
 
-    if (
-        !datum ||
-        !start ||
-        !ende
-    ) {
+    if (!datum || !start || !ende) {
 
-        alert(
-            "Datum und Uhrzeit auswählen"
-        );
-
-        return;
-    }
-
-    const konflikt =
-        APPDATA.reservierungen.find(r => {
-
-            const gleicherTag =
-                r.datum === datum;
-
-            const zeitKonflikt =
-                start < r.ende &&
-                ende > r.start;
-
-            const platzKonflikt =
-                r.platz === platz;
-
-            const kabinenKonflikt =
-                r.kabine === kabine;
-
-            return (
-                gleicherTag &&
-                zeitKonflikt &&
-                (
-                    platzKonflikt ||
-                    kabinenKonflikt
-                )
-            );
-
-        });
-
-    if (konflikt) {
-
-        alert(
-            "Konflikt erkannt!\n\n" +
-            konflikt.team +
-            "\n" +
-            konflikt.platz +
-            "\n" +
-            konflikt.start +
-            " - " +
-            konflikt.ende
-        );
+        alert("Datum und Uhrzeit auswählen");
 
         return;
     }
@@ -223,11 +153,6 @@ function renderReservierungen() {
     renderReservierungen();
 
     initDashboard();
-
     renderPlaetze();
-
     renderKabinen();
-} 
-
 }
-``
