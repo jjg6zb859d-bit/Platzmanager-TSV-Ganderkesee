@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TSV Ganderkesee PlatzManager</title>
+<title>TSV Ganderkesee PlatzManager V1.0 Beta</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -16,40 +16,47 @@
 
 <header>
 
-<div class="header-inner">
+<div class="header-container">
 
-<div class="logo">
+<div class="logo-bereich">
 
-⚽ TSV Ganderkesee
+<img
+src="assets/logo.png"
+alt="TSV Ganderkesee Logo"
+class="vereinslogo">
+
+<div>
+
+<h1>TSV Ganderkesee</h1>
+
+<p>
+Digitaler Platz- und Kabinenbelegungsplan
+</p>
 
 </div>
-
-<div class="subtitle">
-
-Digitaler Platz- und Kabinenbelegungsplan
 
 </div>
 
 <nav>
 
 <button onclick="showPage('dashboard')">
-Dashboard
+🏠 Dashboard
 </button>
 
 <button onclick="showPage('plaetze')">
-Plätze
+⚽ Plätze
 </button>
 
 <button onclick="showPage('kabinen')">
-Kabinen
+🚪 Kabinen
 </button>
 
 <button onclick="showPage('teams')">
-Teams
+👥 Teams
 </button>
 
 <button onclick="showPage('reservierungen')">
-Reservierungen
+📅 Reservierungen
 </button>
 
 </nav>
@@ -60,30 +67,65 @@ Reservierungen
 
 <section class="hero">
 
-<h1>TSV Ganderkesee</h1>
+<h2>
+⚽ PlatzManager V1.0 Beta
+</h2>
 
 <p>
 
-PlatzManager V0.9.4
+Vereinsweite Verwaltung von Trainingsplätzen,
+Kabinen und Reservierungen
 
 </p>
 
 <div class="hero-grid">
 
 <div class="hero-card">
-⚽ Plätze
+
+⚽
+
+<h3>Plätze</h3>
+
+<p>
+Verwaltung aller Trainingsflächen
+</p>
+
 </div>
 
 <div class="hero-card">
-🚪 Kabinen
+
+🚪
+
+<h3>Kabinen</h3>
+
+<p>
+Übersicht aller Kabinen
+</p>
+
 </div>
 
 <div class="hero-card">
-👥 Teams
+
+👥
+
+<h3>Teams</h3>
+
+<p>
+Trainer und Mannschaften
+</p>
+
 </div>
 
 <div class="hero-card">
-📅 Reservierungen
+
+📅
+
+<h3>Reservierungen</h3>
+
+<p>
+Trainings- und Spielbetrieb
+</p>
+
 </div>
 
 </div>
@@ -92,31 +134,57 @@ PlatzManager V0.9.4
 
 <main>
 
-<section id="dashboard" class="page active">
+<section
+id="dashboard"
+class="page active">
 
 <div id="dashboardContent"></div>
 
 </section>
 
-<section id="plaetze" class="page">
+<section
+id="plaetze"
+class="page">
+
+<h2>
+⚽ Platzübersicht
+</h2>
 
 <div id="platzMatrix"></div>
 
 </section>
 
-<section id="kabinen" class="page">
+<section
+id="kabinen"
+class="page">
+
+<h2>
+🚪 Kabinenübersicht
+</h2>
 
 <div id="kabinenMatrix"></div>
 
 </section>
 
-<section id="teams" class="page">
+<section
+id="teams"
+class="page">
+
+<h2>
+👥 Teams
+</h2>
 
 <div id="teamContent"></div>
 
 </section>
 
-<section id="reservierungen" class="page">
+<section
+id="reservierungen"
+class="page">
+
+<h2>
+📅 Reservierungen
+</h2>
 
 <div id="reservierungContent"></div>
 
@@ -124,11 +192,22 @@ PlatzManager V0.9.4
 
 </main>
 
+<footer>
+
+TSV Ganderkesee · PlatzManager V1.0 Beta
+
+</footer>
+
 <script src="modules/storage.js"></script>
+
 <script src="modules/dashboard.js"></script>
+
 <script src="modules/plaetze.js"></script>
+
 <script src="modules/kabinen.js"></script>
+
 <script src="modules/teams.js"></script>
+
 <script src="modules/reservierungen.js"></script>
 
 <script src="app.js"></script>
