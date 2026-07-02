@@ -34,6 +34,10 @@ header p {
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
+.admin-card {
+    border-top: 5px solid #0054A6;
+}
+
 h2 {
     margin-top: 0;
     color: #0054A6;
@@ -47,7 +51,8 @@ label {
 
 input,
 select,
-button {
+button,
+textarea {
     width: 100%;
     padding: 11px;
     margin-bottom: 12px;
@@ -55,6 +60,11 @@ button {
     border-radius: 6px;
     border: 1px solid #ccc;
     font-size: 15px;
+}
+
+textarea {
+    min-height: 80px;
+    resize: vertical;
 }
 
 button {
@@ -69,6 +79,14 @@ button:hover {
     background: #003b73;
 }
 
+button.secondary {
+    background: #607D8B;
+}
+
+button.secondary:hover {
+    background: #455A64;
+}
+
 button.danger {
     background: #c62828;
 }
@@ -79,7 +97,7 @@ button.danger:hover {
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
 }
 
@@ -96,6 +114,24 @@ button.danger:hover {
     margin-top: 5px;
 }
 
+.rollen-anzeige {
+    padding: 10px;
+    border-radius: 8px;
+    background: #eef4ff;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.rollen-anzeige.admin {
+    background: #e8f5e9;
+    color: #1b5e20;
+}
+
+.rollen-anzeige.trainer {
+    background: #fff8e1;
+    color: #795548;
+}
+
 .eintrag {
     padding: 12px;
     margin-bottom: 10px;
@@ -105,6 +141,16 @@ button.danger:hover {
 
 .eintrag strong {
     font-size: 18px;
+}
+
+.status-label {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    background: rgba(255,255,255,0.25);
+    margin-bottom: 6px;
 }
 
 .team-d1 {
@@ -131,10 +177,35 @@ button.danger:hover {
     background: #546E7A;
 }
 
+.status-entwurf {
+    border-left: 8px solid #FFC107;
+}
+
+.status-reserviert {
+    border-left: 8px solid #2196F3;
+}
+
+.status-freigegeben {
+    border-left: 8px solid #4CAF50;
+}
+
+.status-gesperrt {
+    background: #B71C1C !important;
+    border-left: 8px solid #000;
+}
+
 .loeschen {
     background: white;
     color: black;
     margin-top: 10px;
+}
+
+.admin-hinweis {
+    background: rgba(255,255,255,0.25);
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 8px;
+    font-size: 13px;
 }
 
 .wochenplan {
@@ -180,18 +251,22 @@ button.danger:hover {
     font-size: 13px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     .wochenplan {
         grid-template-columns: repeat(2, 1fr);
     }
 
     .dashboard-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 600px) {
     .wochenplan {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid {
         grid-template-columns: 1fr;
     }
 
