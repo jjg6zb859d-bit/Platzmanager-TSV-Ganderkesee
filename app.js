@@ -1,6 +1,7 @@
 const ADMIN_PIN = "1892";
 
 let istAdmin = false;
+let bearbeitungsId = null;
 
 const teams = [
     {
@@ -72,13 +73,16 @@ function selectFelderFuellen() {
     const teamSelect = document.getElementById("team");
     const platzSelect = document.getElementById("platz");
     const kabinenSelect = document.getElementById("kabine");
+    const filterTeam = document.getElementById("filterTeam");
 
     teamSelect.innerHTML = "";
     platzSelect.innerHTML = "";
     kabinenSelect.innerHTML = "";
+    filterTeam.innerHTML = "<option>Alle Teams</option>";
 
     teams.forEach(team => {
         teamSelect.innerHTML += `<option>${team.name}</option>`;
+        filterTeam.innerHTML += `<option>${team.name}</option>`;
     });
 
     plaetze.forEach(platz => {
@@ -96,6 +100,7 @@ function heutigesDatumSetzen() {
 
     document.getElementById("datum").value = heuteText;
     document.getElementById("wochenDatum").value = heuteText;
+    document.getElementById("tagesDatum").value = heuteText;
 }
 
 function adminLogin() {
@@ -114,6 +119,7 @@ function adminLogin() {
 
 function trainerModus() {
     istAdmin = false;
+    bearbeitungAbbrechen();
     rollenAnzeigeAktualisieren();
     aktualisieren();
 }
@@ -155,13 +161,22 @@ function speichern() {
         return;
     }
 
+    if (bearbeitungsId !== null && !istAdmin) {
+        alert("Bearbeiten ist nur im Admin-Modus möglich.");
+        return;
+    }
+
     const konflikt = reservierungen.find(r => {
+        const nichtSelberEintrag = r.id !== bearbeitungsId;
         const gleicherTag = r.datum === datum;
         const zeitUeberschneidung = start < r.ende && ende > r.start;
         const gleicherPlatz = r.platz === platz;
         const gleicheKabine = r.kabine === kabine;
 
-        return gleicherTag && zeitUeberschneidung && (gleicherPlatz || gleicheKabine);
+        return nichtSelberEintrag &&
+            gleicherTag &&
+            zeitUeberschneidung &&
+            (gleicherPlatz || gleicheKabine);
     });
 
     if (konflikt) {
@@ -176,22 +191,44 @@ function speichern() {
         return;
     }
 
-    const neueReservierung = {
-        id: Date.now(),
-        datum: datum,
-        start: start,
-        ende: ende,
-        team: team,
-        platz: platz,
-        kabine: kabine,
-        status: status,
-        notiz: notiz
-    };
+    if (bearbeitungsId !== null) {
+        reservierungen = reservierungen.map(r => {
+            if (r.id === bearbeitungsId) {
+                return {
+                    id: r.id,
+                    datum: datum,
+                    start: start,
+                    ende: ende,
+                    team: team,
+                    platz: platz,
+                    kabine: kabine,
+                    status: status,
+                    notiz: notiz
+                };
+            }
 
-    reservierungen.push(neueReservierung);
+            return r;
+        });
+
+        bearbeitungAbbrechen(false);
+    } else {
+        const neueReservierung = {
+            id: Date.now(),
+            datum: datum,
+            start: start,
+            ende: ende,
+            team: team,
+            platz: platz,
+            kabine: kabine,
+            status: status,
+            notiz: notiz
+        };
+
+        reservierungen.push(neueReservierung);
+        formularZuruecksetzen();
+    }
 
     speichernLocalStorage();
-    formularZuruecksetzen();
     aktualisieren();
 }
 
@@ -213,6 +250,7 @@ function aktualisieren() {
     dashboard();
     anzeigen();
     wochenplan();
+    tagesplan();
 }
 
 function dashboard() {
@@ -222,6 +260,10 @@ function dashboard() {
 
     const entwurf = reservierungen.filter(
         r => r.status === "Entwurf"
+    ).length;
+
+    const reserviert = reservierungen.filter(
+        r => r.status === "Reserviert"
     ).length;
 
     const freigegeben = reservierungen.filter(
@@ -246,6 +288,11 @@ function dashboard() {
             </div>
 
             <div class="dashboard-box">
+                🔵 Reserviert
+                <strong>${reserviert}</strong>
+            </div>
+
+            <div class="dashboard-box">
                 🟢 Freigegeben
                 <strong>${freigegeben}</strong>
             </div>
@@ -262,9 +309,22 @@ function dashboard() {
 function anzeigen() {
     const liste = document.getElementById("liste");
 
+    const filterTeam = document.getElementById("filterTeam").value;
+    const filterStatus = document.getElementById("filterStatus").value;
+
     liste.innerHTML = "";
 
-    const daten = [...reservierungen].sort((a,b) => {
+    let daten = [...reservierungen];
+
+    if (filterTeam !== "Alle Teams") {
+        daten = daten.filter(r => r.team === filterTeam);
+    }
+
+    if (filterStatus !== "Alle Status") {
+        daten = daten.filter(r => r.status === filterStatus);
+    }
+
+    daten.sort((a,b) => {
         if (a.datum !== b.datum) {
             return a.datum.localeCompare(b.datum);
         }
@@ -273,7 +333,7 @@ function anzeigen() {
     });
 
     if (daten.length === 0) {
-        liste.innerHTML = `<div class="leer">Noch keine Reservierungen vorhanden.</div>`;
+        liste.innerHTML = `<div class="leer">Keine passenden Reservierungen vorhanden.</div>`;
         return;
     }
 
@@ -281,18 +341,24 @@ function anzeigen() {
         const klasse = teamKlasse(r.team);
         const statusKlasse = statusKlasseErmitteln(r.status);
 
-        let loeschButton = "";
+        let adminButtons = "";
 
         if (istAdmin) {
-            loeschButton = `
-                <button class="loeschen" onclick="loeschen(${r.id})">
-                    Löschen
-                </button>
+            adminButtons = `
+                <div class="button-row">
+                    <button class="bearbeiten" onclick="bearbeiten(${r.id})">
+                        Bearbeiten
+                    </button>
+
+                    <button class="loeschen" onclick="loeschen(${r.id})">
+                        Löschen
+                    </button>
+                </div>
             `;
         } else {
-            loeschButton = `
+            adminButtons = `
                 <div class="admin-hinweis">
-                    Löschen nur im Admin-Modus möglich.
+                    Bearbeiten und Löschen nur im Admin-Modus möglich.
                 </div>
             `;
         }
@@ -322,15 +388,111 @@ function anzeigen() {
 
                 🚪 ${r.kabine}
 
-                ${r.notiz ? `<br>📝 ${r.notiz}` : ""}
+                ${r.notiz ? `<br>📝 ${textSicher(r.notiz)}` : ""}
 
                 <br>
 
-                ${loeschButton}
+                ${adminButtons}
 
             </div>
         `;
     });
+}
+
+function bearbeiten(id) {
+    if (!istAdmin) {
+        alert("Bearbeiten ist nur im Admin-Modus möglich.");
+        return;
+    }
+
+    const eintrag = reservierungen.find(r => r.id === id);
+
+    if (!eintrag) {
+        alert("Reservierung wurde nicht gefunden.");
+        return;
+    }
+
+    bearbeitungsId = id;
+
+    document.getElementById("formularTitel").textContent = "Reservierung bearbeiten";
+    document.getElementById("speicherButton").textContent = "Änderungen speichern";
+    document.getElementById("abbrechenButton").classList.remove("hidden");
+
+    document.getElementById("datum").value = eintrag.datum;
+    document.getElementById("start").value = eintrag.start;
+    document.getElementById("ende").value = eintrag.ende;
+    document.getElementById("team").value = eintrag.team;
+    document.getElementById("platz").value = eintrag.platz;
+    document.getElementById("kabine").value = eintrag.kabine;
+    document.getElementById("status").value = eintrag.status;
+    document.getElementById("notiz").value = eintrag.notiz || "";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+function bearbeitungAbbrechen(resetFormular = true) {
+    bearbeitungsId = null;
+
+    document.getElementById("formularTitel").textContent = "Neue Reservierung";
+    document.getElementById("speicherButton").textContent = "Reservierung speichern";
+    document.getElementById("abbrechenButton").classList.add("hidden");
+
+    if (resetFormular) {
+        formularZuruecksetzen();
+    }
+}
+
+function tagesplan() {
+    const container = document.getElementById("tagesplan");
+    const datum = document.getElementById("tagesDatum").value;
+
+    container.innerHTML = "";
+
+    if (!datum) {
+        container.innerHTML = `<div class="leer">Bitte einen Tag auswählen.</div>`;
+        return;
+    }
+
+    let html = `<div class="platzmatrix">`;
+
+    plaetze.forEach(platz => {
+        const eintraege = reservierungen
+            .filter(r => r.datum === datum && r.platz === platz)
+            .sort((a,b) => a.start.localeCompare(b.start));
+
+        html += `
+            <div class="platzbox">
+                <h3>${platz}</h3>
+        `;
+
+        if (eintraege.length === 0) {
+            html += `<div class="leer">frei</div>`;
+        } else {
+            eintraege.forEach(r => {
+                const klasse = teamKlasse(r.team);
+                const statusKlasse = statusKlasseErmitteln(r.status);
+
+                html += `
+                    <div class="platz-eintrag ${klasse} ${statusKlasse}">
+                        <span class="status-label">${r.status}</span><br>
+                        <strong>${r.team}</strong><br>
+                        ${r.start} - ${r.ende}<br>
+                        🚪 ${r.kabine}
+                        ${r.notiz ? `<br>📝 ${textSicher(r.notiz)}` : ""}
+                    </div>
+                `;
+            });
+        }
+
+        html += `</div>`;
+    });
+
+    html += `</div>`;
+
+    container.innerHTML = html;
 }
 
 function wochenplan() {
@@ -386,7 +548,7 @@ function wochenplan() {
                         ${r.start} - ${r.ende}<br>
                         ⚽ ${r.platz}<br>
                         🚪 ${r.kabine}
-                        ${r.notiz ? `<br>📝 ${r.notiz}` : ""}
+                        ${r.notiz ? `<br>📝 ${textSicher(r.notiz)}` : ""}
                     </div>
                 `;
             });
@@ -469,6 +631,15 @@ function datumFormat(datum) {
     return `${jahr}-${monat}-${tag}`;
 }
 
+function textSicher(text) {
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
 function exportJSON() {
     const daten = JSON.stringify(
         reservierungen,
@@ -515,7 +686,7 @@ function importJSON(event) {
 
             reservierungen = daten.map(eintrag => {
                 return {
-                    id: eintrag.id || Date.now(),
+                    id: eintrag.id || Date.now() + Math.floor(Math.random() * 100000),
                     datum: eintrag.datum || "",
                     start: eintrag.start || "",
                     ende: eintrag.ende || "",
@@ -538,6 +709,8 @@ function importJSON(event) {
     };
 
     reader.readAsText(datei);
+
+    event.target.value = "";
 }
 
 function alleDatenLoeschen() {
