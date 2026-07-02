@@ -4,6 +4,7 @@ localStorage.getItem("reservierungen")
 ) || [];
 
 anzeigen();
+dashboard();
 
 function speichern(){
 
@@ -25,18 +26,13 @@ document.getElementById("platz").value;
 const kabine =
 document.getElementById("kabine").value;
 
-if(
-!datum ||
-!start ||
-!ende
-){
+if(!datum || !start || !ende){
 
 alert(
-"Bitte Datum und Uhrzeiten auswählen."
+"Datum und Uhrzeit auswählen"
 );
 
 return;
-
 }
 
 const konflikt =
@@ -54,24 +50,13 @@ r.kabine === kabine
 if(konflikt){
 
 alert(
-
 "Konflikt erkannt!\n\n" +
-
-"Team: " +
 konflikt.team +
-"\n" +
-
-"Platz: " +
-konflikt.platz +
-"\n" +
-
-"Kabine: " +
-konflikt.kabine
-
+" nutzt bereits\n" +
+konflikt.platz
 );
 
 return;
-
 }
 
 reservierungen.push({
@@ -86,17 +71,12 @@ kabine
 });
 
 localStorage.setItem(
-
 "reservierungen",
-
-JSON.stringify(
-reservierungen
-)
-
+JSON.stringify(reservierungen)
 );
 
 anzeigen();
-
+dashboard();
 }
 
 function anzeigen(){
@@ -104,28 +84,51 @@ function anzeigen(){
 const liste =
 document.getElementById("liste");
 
+const filter =
+document.getElementById("filterDatum").value;
+
 liste.innerHTML = "";
 
-reservierungen.forEach((r,index)=>{
+let daten =
+reservierungen;
 
-let cssKlasse =
-"team-d1";
+if(filter){
 
-if(r.team === "D2")
-cssKlasse = "team-d2";
+daten =
+reservierungen.filter(
+r => r.datum === filter
+);
 
-if(r.team === "C1")
-cssKlasse = "team-c1";
+}
 
-if(r.team === "C2")
-cssKlasse = "team-c2";
+daten.sort((a,b)=>{
 
-if(r.team === "Herren")
-cssKlasse = "team-herren";
+if(a.datum < b.datum) return -1;
+if(a.datum > b.datum) return 1;
 
-liste.innerHTML += `
+return 0;
 
-<div class="eintrag ${cssKlasse}">
+});
+
+daten.forEach((r,index)=>{
+
+let cssKlasse="team-d1";
+
+if(r.team==="D2")
+cssKlasse="team-d2";
+
+if(r.team==="C1")
+cssKlasse="team-c1";
+
+if(r.team==="C2")
+cssKlasse="team-c2";
+
+if(r.team==="Herren")
+cssKlasse="team-herren";
+
+liste.innerHTML +=
+
+`<div class="eintrag ${cssKlasse}">
 
 <strong>${r.team}</strong>
 
@@ -155,31 +158,54 @@ Löschen
 
 </button>
 
-</div>
-
-`;
+</div>`;
 
 });
 
 }
 
+function dashboard(){
+
+const dashboard =
+document.getElementById("dashboard");
+
+const anzahl =
+reservierungen.length;
+
+dashboard.innerHTML =
+
+`<div class="dashboard-box">
+
+📋 Reservierungen gesamt:
+<strong>${anzahl}</strong>
+
+</div>
+
+<div class="dashboard-box">
+
+⚽ Plätze im System:
+<strong>9</strong>
+
+</div>
+
+<div class="dashboard-box">
+
+🚪 Kabinenhälften:
+<strong>16</strong>
+
+</div>`;
+}
+
 function loeschen(index){
 
-reservierungen.splice(
-index,
-1
-);
+reservierungen.splice(index,1);
 
 localStorage.setItem(
-
 "reservierungen",
-
-JSON.stringify(
-reservierungen
-)
-
+JSON.stringify(reservierungen)
 );
 
 anzeigen();
+dashboard();
 
 }
