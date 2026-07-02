@@ -20,4 +20,4 @@ initKabinen();
 initTeams();
 initAdmin();
 initReservierungen();
-``
+
