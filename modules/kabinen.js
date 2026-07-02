@@ -6,7 +6,7 @@ function initKabinen() {
 
 function renderKabinen() {
 
-    const div =
+    const container =
         document.getElementById(
             "kabinenMatrix"
         );
@@ -16,61 +16,83 @@ function renderKabinen() {
 
     APPDATA.kabinen.forEach(kabine => {
 
-        const belegung =
+        const reservierungen =
             APPDATA.reservierungen.filter(
-                r => r.kabine === kabine.name
+                r =>
+                r.kabine === kabine.name
             );
 
-        let css = "frei";
+        let klasse = "frei";
 
-        if (belegung.length > 0) {
+        if (
+            reservierungen.length > 0
+        ) {
 
-            css = "belegt";
+            klasse = "belegt";
 
         }
 
         html += `
 
-        <div class="card ${css}">
+        <div class="card ${klasse}">
 
             <h3>
-
                 ${kabine.name}
-
             </h3>
 
         `;
 
-        if (belegung.length === 0) {
+        if (
+            reservierungen.length === 0
+        ) {
 
-            html += `FREI`;
+            html += `
 
-        } else {
+            <strong>
+                Frei
+            </strong>
 
-            belegung.forEach(b => {
+            `;
 
-                html += `
+        }
+
+        reservierungen.forEach(r => {
+
+            html += `
+
+            <div class="reservierung">
 
                 <strong>
-                ${b.team}
+                    ${r.team}
                 </strong>
 
                 <br>
 
-                ${b.start} - ${b.ende}
+                ${r.start}
+                -
+                ${r.ende}
 
-                `;
+                <br>
 
-            });
+                ${r.status}
 
-        }
+            </div>
 
-        html += `</div>`;
+            `;
+
+        });
+
+        html += `
+
+        </div>
+
+        `;
 
     });
 
-    html += '</div>';
+    html += "</div>";
 
-    div.innerHTML = html;
+    container.innerHTML =
+        html;
 
 }
