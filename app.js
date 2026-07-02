@@ -2,15 +2,19 @@ function showPage(page){
 
 document
 .querySelectorAll(".page")
-.forEach(p=>{
+.forEach(section=>{
 
-p.classList.remove("active");
+section.classList.remove(
+"active"
+);
 
 });
 
 document
 .getElementById(page)
-.classList.add("active");
+.classList.add(
+"active"
+);
 
 }
 
@@ -18,6 +22,4 @@ initDashboard();
 initPlaetze();
 initKabinen();
 initTeams();
-initAdmin();
 initReservierungen();
-
