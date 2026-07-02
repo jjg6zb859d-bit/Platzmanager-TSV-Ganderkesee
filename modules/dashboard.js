@@ -1,48 +1,201 @@
-function initDashboard(){
+function initDashboard() {
 
-const div =
-document.getElementById(
-"dashboardContent"
-);
+    renderDashboard();
 
-div.innerHTML = `
+}
 
-<div class="grid">
+function renderDashboard() {
 
-<div class="card">
+    const div =
+        document.getElementById(
+            "dashboardContent"
+        );
 
-<h3>⚽ Plätze</h3>
+    const freiePlaetzeAnzahl =
+        freiePlaetze();
 
-${APPDATA.plaetze.length}
+    const freieKabinenAnzahl =
+        freieKabinen();
 
-</div>
+    const reservierungenHeute =
+        APPDATA.reservierungen.filter(r => {
 
-<div class="card">
+            return (
+                r.datum === getHeute()
+            );
 
-<h3>🚪 Kabinen</h3>
+        }).length;
 
-${APPDATA.kabinen.length}
+    let letzteReservierungen =
+        [...APPDATA.reservierungen]
+        .reverse()
+        .slice(0, 5);
 
-</div>
+    let html = `
 
-<div class="card">
+    <div class="grid">
 
-<h3>👥 Teams</h3>
+        <div class="dashboard-box">
 
-${APPDATA.teams.length}
+            <h3>⚽ Plätze</h3>
 
-</div>
+            <div class="dashboard-zahl">
+                ${APPDATA.plaetze.length}
+            </div>
 
-<div class="card">
+        </div>
 
-<h3>📅 Reservierungen</h3>
+        <div class="dashboard-box">
 
-${APPDATA.reservierungen.length}
+            <h3>🚪 Kabinen</h3>
 
-</div>
+            <div class="dashboard-zahl">
+                ${APPDATA.kabinen.length}
+            </div>
 
-</div>
+        </div>
 
-`;
+        <div class="dashboard-box">
+
+            <h3>👥 Teams</h3>
+
+            <div class="dashboard-zahl">
+                ${APPDATA.teams.length}
+            </div>
+
+        </div>
+
+        <div class="dashboard-box">
+
+            <h3>📅 Reservierungen</h3>
+
+            <div class="dashboard-zahl">
+                ${APPDATA.reservierungen.length}
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="grid">
+
+        <div class="card frei">
+
+            <h3>🟢 Freie Plätze</h3>
+
+            <div class="dashboard-zahl">
+                ${freiePlaetzeAnzahl}
+            </div>
+
+        </div>
+
+        <div class="card frei">
+
+            <h3>🟢 Freie Kabinen</h3>
+
+            <div class="dashboard-zahl">
+                ${freieKabinenAnzahl}
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>📋 Reservierungen heute</h3>
+
+            <div class="dashboard-zahl">
+                ${reservierungenHeute}
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>
+            Letzte Reservierungen
+        </h2>
+
+    `;
+
+    if (
+        letzteReservierungen.length === 0
+    ) {
+
+        html += `
+
+        <p>
+            Noch keine Reservierungen vorhanden.
+        </p>
+
+        `;
+
+    } else {
+
+        letzteReservierungen.forEach(r => {
+
+            html += `
+
+            <div class="reservierung">
+
+                <strong>
+                    ${r.team}
+                </strong>
+
+                <br>
+
+                📅
+                ${formatDate(
+                    r.datum
+                )}
+
+                <br>
+
+                ⏰
+                ${r.start}
+                -
+                ${r.ende}
+
+                <br>
+
+                ⚽
+                ${r.platz}
+
+                <br>
+
+                🚪
+                ${r.kabine}
+
+                <br>
+
+                <span
+                style="
+                color:${getStatusColor(
+                    r.status
+                )};
+                font-weight:bold;
+                ">
+
+                ${r.status}
+
+                </span>
+
+            </div>
+
+            `;
+
+        });
+
+    }
+
+    html += `
+
+    </div>
+
+    `;
+
+    div.innerHTML =
+        html;
 
 }
