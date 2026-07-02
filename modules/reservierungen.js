@@ -130,4 +130,6 @@ function reservierungSpeichern() {
     renderReservierungen();
 
     initDashboard();
+    renderPlaetze();
+    renderKabinen();
 }
