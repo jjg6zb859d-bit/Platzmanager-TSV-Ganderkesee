@@ -1,97 +1,99 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>TSV PlatzManager</title>
 
 <link rel="stylesheet" href="style.css">
-</head>
 
+</head>
 
 <body>
 
 <header>
-    <h1>⚽ TSV Ganderkesee</h1>
-    <p>Digitaler Platz- und Kabinenplan</p>
+
+<h1>⚽ TSV Ganderkesee</h1>
+
+<p>
+Digitaler Platz- und Kabinenbelegungsplan
+</p>
+
 </header>
 
 <div class="container">
 
-    <div class="card">
+<div class="card">
 
-        <h2>Neue Reservierung</h2>
-
-        <input type="date" id="datum">
-
-        <select id="team">
-            <option>D1</option>
-            <option>D2</option>
-            <option>C1</option>
-            <option>C2</option>
-            <option>Herren</option>
-        </select>
-
-        <select id="platz">
-            
 <h2>Neue Reservierung</h2>
 
-<input type="date" id="datum">
+<input
+type="date"
+id="datum">
 
-<input type="time" id="start">
+<input
+type="time"
+id="start">
 
-<input type="time" id="ende">
+<input
+type="time"
+id="ende">
 
 <select id="team">
-    <option>D1</option>
-    <option>D2</option>
-    <option>C1</option>
-    <option>C2</option>
-    <option>Herren</option>
+
+<option>D1</option>
+<option>D2</option>
+<option>C1</option>
+<option>C2</option>
+<option>Herren</option>
+
 </select>
 
 <select id="platz">
-    <option>Hauptplatz</option>
-    <option>Kunstrasen</option>
-    <option>Trainingsplatz</option>
-    <option>Jugendplatz</option>
+
+<option>Hauptplatz</option>
+<option>Kunstrasen</option>
+<option>Trainingsplatz</option>
+<option>Jugendplatz</option>
+
 </select>
 
 <select id="kabine">
-    <option>Kabine 1</option>
-    <option>Kabine 2</option>
-    <option>Kabine 3</option>
-    <option>Kabine 4</option>
-    <option>Kabine 5</option>
-    <option>Kabine 6</option>
-    <option>Kabine 7</option>
-    <option>Kabine 8</option>
+
+<option>Kabine 1</option>
+<option>Kabine 2</option>
+<option>Kabine 3</option>
+<option>Kabine 4</option>
+<option>Kabine 5</option>
+<option>Kabine 6</option>
+<option>Kabine 7</option>
+<option>Kabine 8</option>
+
 </select>
 
 <button onclick="speichern()">
-    Reservieren
+
+Reservieren
+
 </button>
-Neue Reservierung
 
-    </div>
+</div>
 
-    <div class="card">
+<div class="card">
 
-        <h2>Reservierungen</h2>
+<h2>Reservierungen</h2>
 
-        <div id="liste"></div>
+<div id="liste"></div>
 
-    </div>
+</div>
 
 </div>
 
 <script src="app.js"></script>
 
 </body>
-</html>
-⚽ TSV Ganderkesee
-Digitaler Platz- und Kabinenplan
 
-Neue Reservierung
-Reservierungen
+</html>
