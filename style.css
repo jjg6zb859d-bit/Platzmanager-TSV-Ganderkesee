@@ -1,32 +1,41 @@
 body{
 
 margin:0;
-
 font-family:Arial,sans-serif;
-
-background:#f2f4f7;
+background:#f3f5f8;
 
 }
 
 header{
 
 background:#0054A6;
-
-padding:15px;
-
 color:white;
+
+}
+
+.header-inner{
+
+padding:20px;
 
 }
 
 .logo{
 
-font-size:22px;
+font-size:32px;
 font-weight:bold;
-margin-bottom:10px;
+
+}
+
+.subtitle{
+
+margin-top:5px;
+opacity:.9;
 
 }
 
 nav{
+
+margin-top:20px;
 
 display:flex;
 gap:10px;
@@ -36,17 +45,88 @@ flex-wrap:wrap;
 
 nav button{
 
-padding:10px;
+padding:12px 20px;
+
 border:none;
-border-radius:5px;
+
+border-radius:8px;
+
+background:white;
+
 cursor:pointer;
+
+font-weight:bold;
+
+}
+
+nav button:hover{
+
+background:#dde9ff;
+
+}
+
+.hero{
+
+background:white;
+
+margin:20px;
+
+padding:30px;
+
+border-radius:15px;
+
+text-align:center;
+
+box-shadow:0 3px 8px rgba(0,0,0,.15);
+
+}
+
+.hero h1{
+
+color:#0054A6;
+
+font-size:42px;
+
+margin-bottom:10px;
+
+}
+
+.hero-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:15px;
+
+margin-top:25px;
+
+}
+
+.hero-card{
+
+background:#f4f7fc;
+
+padding:20px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+font-size:18px;
+
+}
+
+main{
+
+padding:20px;
 
 }
 
 .page{
 
 display:none;
-padding:20px;
 
 }
 
@@ -64,9 +144,9 @@ padding:15px;
 
 border-radius:10px;
 
-margin-bottom:10px;
-
 box-shadow:0 2px 5px rgba(0,0,0,.15);
+
+margin-bottom:15px;
 
 }
 
@@ -74,88 +154,35 @@ box-shadow:0 2px 5px rgba(0,0,0,.15);
 
 display:grid;
 
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
 
-gap:10px;
+gap:15px;
 
 }
 
-.status-frei{
+.frei{
 
 background:#C8E6C9;
 
 }
 
-.status-belegt{
+.belegt{
 
 background:#FFF59D;
 
 }
 
-.status-gesperrt{
+input,
+select,
+button{
 
-background:#FFCDD2;
+width:100%;
 
-}
-
-.hero{
-
-background:white;
-
-padding:25px;
-
-margin:20px;
-
-border-radius:15px;
-
-box-shadow:
-0 4px 10px rgba(
-0,0,0,.15
-);
-
-text-align:center;
-
-}
-
-.hero h1{
-
-font-size:38px;
+padding:10px;
 
 margin-bottom:10px;
 
-color:#0054A6;
-
-}
-
-.hero p{
-
-font-size:18px;
-
-color:#555;
-
-}
-
-.hero-grid{
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(200px,1fr));
-
-gap:15px;
-
-margin-top:25px;
-
-}
-
-.hero-card{
-
-background:#f5f7fa;
-
-padding:15px;
-
-border-radius:10px;
-
-font-weight:bold;
+box-sizing:border-box;
 
 }
