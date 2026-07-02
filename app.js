@@ -19,3 +19,4 @@ initPlaetze();
 initKabinen();
 initTeams();
 initAdmin();
+initReservierungen();
