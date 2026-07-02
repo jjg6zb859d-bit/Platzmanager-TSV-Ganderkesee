@@ -1,3 +1,7 @@
+const ADMIN_PIN = "1892";
+
+let istAdmin = false;
+
 const teams = [
     {
         name: "D1",
@@ -60,6 +64,7 @@ starten();
 function starten() {
     selectFelderFuellen();
     heutigesDatumSetzen();
+    rollenAnzeigeAktualisieren();
     aktualisieren();
 }
 
@@ -93,6 +98,38 @@ function heutigesDatumSetzen() {
     document.getElementById("wochenDatum").value = heuteText;
 }
 
+function adminLogin() {
+    const pin = document.getElementById("adminPin").value;
+
+    if (pin === ADMIN_PIN) {
+        istAdmin = true;
+        document.getElementById("adminPin").value = "";
+        rollenAnzeigeAktualisieren();
+        aktualisieren();
+        alert("Admin-Modus aktiviert.");
+    } else {
+        alert("Falscher Admin-PIN.");
+    }
+}
+
+function trainerModus() {
+    istAdmin = false;
+    rollenAnzeigeAktualisieren();
+    aktualisieren();
+}
+
+function rollenAnzeigeAktualisieren() {
+    const anzeige = document.getElementById("rollenAnzeige");
+
+    if (istAdmin) {
+        anzeige.textContent = "Aktueller Modus: Jugendleiter / Admin";
+        anzeige.className = "rollen-anzeige admin";
+    } else {
+        anzeige.textContent = "Aktueller Modus: Trainer";
+        anzeige.className = "rollen-anzeige trainer";
+    }
+}
+
 function speichern() {
     const datum = document.getElementById("datum").value;
     const start = document.getElementById("start").value;
@@ -100,6 +137,8 @@ function speichern() {
     const team = document.getElementById("team").value;
     const platz = document.getElementById("platz").value;
     const kabine = document.getElementById("kabine").value;
+    const status = document.getElementById("status").value;
+    const notiz = document.getElementById("notiz").value.trim();
 
     if (!datum || !start || !ende) {
         alert("Bitte Datum, Startzeit und Endzeit auswählen.");
@@ -108,6 +147,11 @@ function speichern() {
 
     if (start >= ende) {
         alert("Die Endzeit muss nach der Startzeit liegen.");
+        return;
+    }
+
+    if ((status === "Freigegeben" || status === "Gesperrt") && !istAdmin) {
+        alert("Nur der Admin darf Freigaben oder Sperrungen eintragen.");
         return;
     }
 
@@ -124,6 +168,7 @@ function speichern() {
         alert(
             "Konflikt erkannt!\n\n" +
             "Team: " + konflikt.team + "\n" +
+            "Status: " + konflikt.status + "\n" +
             "Zeit: " + konflikt.start + " - " + konflikt.ende + "\n" +
             "Platz: " + konflikt.platz + "\n" +
             "Kabine: " + konflikt.kabine
@@ -138,7 +183,9 @@ function speichern() {
         ende: ende,
         team: team,
         platz: platz,
-        kabine: kabine
+        kabine: kabine,
+        status: status,
+        notiz: notiz
     };
 
     reservierungen.push(neueReservierung);
@@ -151,6 +198,8 @@ function speichern() {
 function formularZuruecksetzen() {
     document.getElementById("start").value = "";
     document.getElementById("ende").value = "";
+    document.getElementById("notiz").value = "";
+    document.getElementById("status").value = "Entwurf";
 }
 
 function speichernLocalStorage() {
@@ -169,11 +218,18 @@ function aktualisieren() {
 function dashboard() {
     const dashboard = document.getElementById("dashboard");
 
-    const anzahl = reservierungen.length;
-    const heute = datumFormat(new Date());
+    const gesamt = reservierungen.length;
 
-    const heuteReservierungen = reservierungen.filter(
-        r => r.datum === heute
+    const entwurf = reservierungen.filter(
+        r => r.status === "Entwurf"
+    ).length;
+
+    const freigegeben = reservierungen.filter(
+        r => r.status === "Freigegeben"
+    ).length;
+
+    const gesperrt = reservierungen.filter(
+        r => r.status === "Gesperrt"
     ).length;
 
     dashboard.innerHTML = `
@@ -181,17 +237,22 @@ function dashboard() {
 
             <div class="dashboard-box">
                 📋 Gesamt
-                <strong>${anzahl}</strong>
+                <strong>${gesamt}</strong>
             </div>
 
             <div class="dashboard-box">
-                📅 Heute
-                <strong>${heuteReservierungen}</strong>
+                🟡 Entwürfe
+                <strong>${entwurf}</strong>
             </div>
 
             <div class="dashboard-box">
-                🚪 Kabinenhälften
-                <strong>${kabinen.length}</strong>
+                🟢 Freigegeben
+                <strong>${freigegeben}</strong>
+            </div>
+
+            <div class="dashboard-box">
+                🔴 Gesperrt
+                <strong>${gesperrt}</strong>
             </div>
 
         </div>
@@ -218,9 +279,30 @@ function anzeigen() {
 
     daten.forEach(r => {
         const klasse = teamKlasse(r.team);
+        const statusKlasse = statusKlasseErmitteln(r.status);
+
+        let loeschButton = "";
+
+        if (istAdmin) {
+            loeschButton = `
+                <button class="loeschen" onclick="loeschen(${r.id})">
+                    Löschen
+                </button>
+            `;
+        } else {
+            loeschButton = `
+                <div class="admin-hinweis">
+                    Löschen nur im Admin-Modus möglich.
+                </div>
+            `;
+        }
 
         liste.innerHTML += `
-            <div class="eintrag ${klasse}">
+            <div class="eintrag ${klasse} ${statusKlasse}">
+
+                <span class="status-label">${r.status}</span>
+
+                <br>
 
                 <strong>${r.team}</strong>
 
@@ -240,11 +322,11 @@ function anzeigen() {
 
                 🚪 ${r.kabine}
 
+                ${r.notiz ? `<br>📝 ${r.notiz}` : ""}
+
                 <br>
 
-                <button class="loeschen" onclick="loeschen(${r.id})">
-                    Löschen
-                </button>
+                ${loeschButton}
 
             </div>
         `;
@@ -295,13 +377,16 @@ function wochenplan() {
         } else {
             eintraege.forEach(r => {
                 const klasse = teamKlasse(r.team);
+                const statusKlasse = statusKlasseErmitteln(r.status);
 
                 html += `
-                    <div class="wochen-eintrag ${klasse}">
+                    <div class="wochen-eintrag ${klasse} ${statusKlasse}">
+                        <span class="status-label">${r.status}</span><br>
                         <strong>${r.team}</strong><br>
                         ${r.start} - ${r.ende}<br>
                         ⚽ ${r.platz}<br>
                         🚪 ${r.kabine}
+                        ${r.notiz ? `<br>📝 ${r.notiz}` : ""}
                     </div>
                 `;
             });
@@ -314,6 +399,19 @@ function wochenplan() {
 }
 
 function loeschen(id) {
+    if (!istAdmin) {
+        alert("Nur der Admin darf Reservierungen löschen.");
+        return;
+    }
+
+    const bestaetigung = confirm(
+        "Diese Reservierung wirklich löschen?"
+    );
+
+    if (!bestaetigung) {
+        return;
+    }
+
     reservierungen = reservierungen.filter(
         r => r.id !== id
     );
@@ -332,6 +430,26 @@ function teamKlasse(teamName) {
     }
 
     return "team-standard";
+}
+
+function statusKlasseErmitteln(status) {
+    if (status === "Entwurf") {
+        return "status-entwurf";
+    }
+
+    if (status === "Reserviert") {
+        return "status-reserviert";
+    }
+
+    if (status === "Freigegeben") {
+        return "status-freigegeben";
+    }
+
+    if (status === "Gesperrt") {
+        return "status-gesperrt";
+    }
+
+    return "";
 }
 
 function montagDerWoche(datum) {
@@ -395,7 +513,19 @@ function importJSON(event) {
                 return;
             }
 
-            reservierungen = daten;
+            reservierungen = daten.map(eintrag => {
+                return {
+                    id: eintrag.id || Date.now(),
+                    datum: eintrag.datum || "",
+                    start: eintrag.start || "",
+                    ende: eintrag.ende || "",
+                    team: eintrag.team || "D1",
+                    platz: eintrag.platz || "Hauptplatz A",
+                    kabine: eintrag.kabine || "K1 Links",
+                    status: eintrag.status || "Entwurf",
+                    notiz: eintrag.notiz || ""
+                };
+            });
 
             speichernLocalStorage();
             aktualisieren();
@@ -411,6 +541,11 @@ function importJSON(event) {
 }
 
 function alleDatenLoeschen() {
+    if (!istAdmin) {
+        alert("Nur der Admin darf alle Daten löschen.");
+        return;
+    }
+
     const bestaetigung = confirm(
         "Möchtest du wirklich alle Reservierungen löschen?"
     );
