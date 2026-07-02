@@ -1,38 +1,123 @@
-function initReservierungen(){
+function initReservierungen() {
 
-const div =
-document.getElementById(
-"reservierungContent"
-);
-
-div.innerHTML = `
-
-<div class="card">
-
-<h3>Neue Reservierung</h3>
-
-<select>
-
-<option>D1</option>
-
-<option>C1</option>
-
-</select>
-
-<input type="date">
-
-<input type="time">
-
-<input type="time">
-
-<button>
-
-Reservieren
-
-</button>
-
-</div>
-
-`;
+    renderReservierungen();
 
 }
+
+function renderReservierungen() {
+
+    const div =
+        document.getElementById(
+            "reservierungContent"
+        );
+
+    let html = `
+
+    <div class="card">
+
+        <h3>Neue Reservierung</h3>
+
+        <label>Team</label>
+
+        <select id="resTeam">
+
+            ${APPDATA.teams.map(team =>
+
+                `<option>${team.name}</option>`
+
+            ).join("")}
+
+        </select>
+
+        <label>Datum</label>
+
+        <input
+            type="date"
+            id="resDatum">
+
+        <label>Start</label>
+
+        <input
+            type="time"
+            id="resStart">
+
+        <label>Ende</label>
+
+        <input
+            type="time"
+            id="resEnde">
+
+        <label>Platz</label>
+
+        <select id="resPlatz">
+
+            ${APPDATA.plaetze.map(platz =>
+
+                `<option>${platz.name}</option>`
+
+            ).join("")}
+
+        </select>
+
+        <label>Kabine</label>
+
+        <select id="resKabine">
+
+            ${APPDATA.kabinen.map(kabine =>
+
+                `<option>${kabine.name}</option>`
+
+            ).join("")}
+
+        </select>
+
+        <button onclick="reservierungSpeichern()">
+
+            Reservierung speichern
+
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Aktuelle Reservierungen</h3>
+
+    `;
+
+    APPDATA.reservierungen.forEach(r => {
+
+        html += `
+
+        <div class="card belegt">
+
+            <strong>${r.team}</strong>
+
+            <br>
+
+            📅 ${r.datum}
+
+            <br>
+
+            ⏰ ${r.start} - ${r.ende}
+
+            <br>
+
+            ⚽ ${r.platz}
+
+            <br>
+
+            🚪 ${r.kabine}
+
+        </div>
+
+        `;
+
+    });
+
+    html += `</div>`;
+
+    div.innerHTML = html;
+
+}
+``
