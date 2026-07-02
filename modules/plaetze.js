@@ -6,7 +6,7 @@ function initPlaetze() {
 
 function renderPlaetze() {
 
-    const div =
+    const container =
         document.getElementById(
             "platzMatrix"
         );
@@ -16,63 +16,83 @@ function renderPlaetze() {
 
     APPDATA.plaetze.forEach(platz => {
 
-        const belegung =
+        const reservierungen =
             APPDATA.reservierungen.filter(
-                r => r.platz === platz.name
+                r =>
+                r.platz === platz.name
             );
 
-        let css = "frei";
+        let klasse = "frei";
 
-        if (belegung.length > 0) {
+        if (
+            reservierungen.length > 0
+        ) {
 
-            css = "belegt";
+            klasse = "belegt";
 
         }
 
         html += `
 
-        <div class="card ${css}">
+        <div class="card ${klasse}">
 
             <h3>
-
                 ${platz.name}
-
             </h3>
 
         `;
 
-        if (belegung.length === 0) {
+        if (
+            reservierungen.length === 0
+        ) {
 
-            html += `FREI`;
+            html += `
 
-        } else {
+            <strong>
+                Frei
+            </strong>
 
-            belegung.forEach(b => {
+            `;
 
-                html += `
+        }
+
+        reservierungen.forEach(r => {
+
+            html += `
+
+            <div class="reservierung">
 
                 <strong>
-                ${b.team}
+                    ${r.team}
                 </strong>
 
                 <br>
 
-                ${b.start} - ${b.ende}
+                ${r.start}
+                -
+                ${r.ende}
 
-                <br><br>
+                <br>
 
-                `;
+                ${r.status}
 
-            });
+            </div>
 
-        }
+            `;
 
-        html += `</div>`;
+        });
+
+        html += `
+
+        </div>
+
+        `;
 
     });
 
-    html += '</div>';
+    html += "</div>";
 
-    div.innerHTML = html;
+    container.innerHTML =
+        html;
 
 }
