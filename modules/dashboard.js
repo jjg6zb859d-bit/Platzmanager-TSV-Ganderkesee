@@ -1,48 +1,48 @@
 function initDashboard(){
 
-    const div =
-    document.getElementById(
-        "dashboardContent"
-    );
+const div =
+document.getElementById(
+"dashboardContent"
+);
 
-    div.innerHTML = `
+div.innerHTML = `
 
-    <div class="grid">
+<div class="grid">
 
-        <div class="card">
+<div class="card">
 
-            <h3>⚽ Plätze</h3>
+<h3>⚽ Plätze</h3>
 
-            ${APPDATA.plaetze.length}
+${APPDATA.plaetze.length}
 
-        </div>
+</div>
 
-        <div class="card">
+<div class="card">
 
-            <h3>🚪 Kabinen</h3>
+<h3>🚪 Kabinen</h3>
 
-            ${APPDATA.kabinen.length}
+${APPDATA.kabinen.length}
 
-        </div>
+</div>
 
-        <div class="card">
+<div class="card">
 
-            <h3>👥 Teams</h3>
+<h3>👥 Teams</h3>
 
-            ${APPDATA.teams.length}
+${APPDATA.teams.length}
 
-        </div>
+</div>
 
-        <div class="card">
+<div class="card">
 
-            <h3>📋 Reservierungen</h3>
+<h3>📅 Reservierungen</h3>
 
-            ${APPDATA.reservierungen.length}
+${APPDATA.reservierungen.length}
 
-        </div>
+</div>
 
-    </div>
+</div>
 
-    `;
+`;
 
 }
