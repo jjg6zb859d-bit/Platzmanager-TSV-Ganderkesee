@@ -1,10 +1,12 @@
 function initReservierungen() {
+
     renderReservierungen();
+
 }
 
 function renderReservierungen() {
 
-    const div =
+    const container =
         document.getElementById(
             "reservierungContent"
         );
@@ -13,91 +15,195 @@ function renderReservierungen() {
 
     <div class="card">
 
-        <h3>Neue Reservierung</h3>
+        <h2>
+            Neue Reservierung
+        </h2>
 
-        <label>Team</label>
+        <label>
+            Team
+        </label>
 
         <select id="resTeam">
 
-            ${APPDATA.teams.map(team =>
-                `<option>${team.name}</option>`
-            ).join("")}
+            ${APPDATA.teams.map(team => `
+
+                <option>
+                    ${team.name}
+                </option>
+
+            `).join("")}
 
         </select>
 
-        <label>Datum</label>
+        <label>
+            Datum
+        </label>
 
         <input
             type="date"
             id="resDatum">
 
-        <label>Startzeit</label>
+        <label>
+            Startzeit
+        </label>
 
         <input
             type="time"
             id="resStart">
 
-        <label>Endzeit</label>
+        <label>
+            Endzeit
+        </label>
 
         <input
             type="time"
             id="resEnde">
 
-        <label>Platz</label>
+        <label>
+            Platz
+        </label>
 
         <select id="resPlatz">
 
-            ${APPDATA.plaetze.map(platz =>
-                `<option>${platz.name}</option>`
-            ).join("")}
+            ${APPDATA.plaetze.map(platz => `
+
+                <option>
+                    ${platz.name}
+                </option>
+
+            `).join("")}
 
         </select>
 
-        <label>Kabine</label>
+        <label>
+            Kabine
+        </label>
 
         <select id="resKabine">
 
-            ${APPDATA.kabinen.map(kabine =>
-                `<option>${kabine.name}</option>`
-            ).join("")}
+            ${APPDATA.kabinen.map(kabine => `
+
+                <option>
+                    ${kabine.name}
+                </option>
+
+            `).join("")}
 
         </select>
 
-        <button onclick="reservierungSpeichern()">
+        <label>
+            Status
+        </label>
+
+        <select id="resStatus">
+
+            <option>
+                Reserviert
+            </option>
+
+            <option>
+                Freigegeben
+            </option>
+
+            <option>
+                Gesperrt
+            </option>
+
+        </select>
+
+        <button
+            onclick="reservierungSpeichern()">
+
             Reservierung speichern
+
         </button>
 
     </div>
 
     <div class="card">
 
-        <h3>Aktuelle Reservierungen</h3>
+        <h2>
+            Aktuelle Reservierungen
+        </h2>
 
     `;
+
+    if (
+        APPDATA.reservierungen.length === 0
+    ) {
+
+        html += `
+
+        <p>
+            Noch keine Reservierungen vorhanden.
+        </p>
+
+        `;
+
+    }
 
     APPDATA.reservierungen.forEach(r => {
 
         html += `
 
-        <div class="card belegt">
+        <div class="reservierung">
 
-            <strong>${r.team}</strong>
-
-            <br>
-
-            📅 ${r.datum}
+            <strong>
+                ${r.team}
+            </strong>
 
             <br>
 
-            ⏰ ${r.start} - ${r.ende}
+            📅
+            ${formatDate(
+                r.datum
+            )}
 
             <br>
 
-            ⚽ ${r.platz}
+            ⏰
+            ${r.start}
+            -
+            ${r.ende}
 
             <br>
 
-            🚪 ${r.kabine}
+            ⚽
+            ${r.platz}
+
+            <br>
+
+            🚪
+            ${r.kabine}
+
+            <br>
+
+            Status:
+
+            <span
+            style="
+            color:${getStatusColor(
+                r.status
+            )};
+            font-weight:bold;
+            ">
+
+            ${r.status}
+
+            </span>
+
+            <br><br>
+
+            <button
+                onclick="
+                reservierungLoeschen(
+                    ${r.id}
+                )
+                ">
+
+                Löschen
+
+            </button>
 
         </div>
 
@@ -105,54 +211,192 @@ function renderReservierungen() {
 
     });
 
-    html += `</div>`;
+    html += `
 
-    div.innerHTML = html;
+    </div>
+
+    `;
+
+    container.innerHTML =
+        html;
+
 }
 
 function reservierungSpeichern() {
 
     const team =
-        document.getElementById("resTeam").value;
+        document.getElementById(
+            "resTeam"
+        ).value;
 
     const datum =
-        document.getElementById("resDatum").value;
+        document.getElementById(
+            "resDatum"
+        ).value;
 
     const start =
-        document.getElementById("resStart").value;
+        document.getElementById(
+            "resStart"
+        ).value;
 
     const ende =
-        document.getElementById("resEnde").value;
+        document.getElementById(
+            "resEnde"
+        ).value;
 
     const platz =
-        document.getElementById("resPlatz").value;
+        document.getElementById(
+            "resPlatz"
+        ).value;
 
     const kabine =
-        document.getElementById("resKabine").value;
+        document.getElementById(
+            "resKabine"
+        ).value;
 
-    if (!datum || !start || !ende) {
+    const status =
+        document.getElementById(
+            "resStatus"
+        ).value;
 
-        alert("Datum und Uhrzeit auswählen");
+    if (
+        !datum ||
+        !start ||
+        !ende
+    ) {
+
+        alert(
+            "Bitte Datum und Uhrzeit auswählen."
+        );
 
         return;
+
+    }
+
+    if (
+        start >= ende
+    ) {
+
+        alert(
+            "Endzeit muss nach Startzeit liegen."
+        );
+
+        return;
+
+    }
+
+    const konflikt =
+        APPDATA.reservierungen.find(r => {
+
+            const gleicherTag =
+                r.datum === datum;
+
+            const gleicheZeit =
+
+                start < r.ende &&
+                ende > r.start;
+
+            const gleicherPlatz =
+                r.platz === platz;
+
+            const gleicheKabine =
+                r.kabine === kabine;
+
+            return (
+                gleicherTag &&
+                gleicheZeit &&
+                (
+                    gleicherPlatz ||
+                    gleicheKabine
+                )
+            );
+
+        });
+
+    if (
+        konflikt
+    ) {
+
+        alert(
+
+            "Konflikt erkannt!\n\n" +
+
+            konflikt.team +
+
+            "\n" +
+
+            konflikt.platz +
+
+            "\n" +
+
+            konflikt.start +
+
+            " - " +
+
+            konflikt.ende
+
+        );
+
+        return;
+
     }
 
     APPDATA.reservierungen.push({
 
-        id: Date.now(),
+        id:
+            neueID(),
 
-        team,
-        datum,
-        start,
-        ende,
-        platz,
-        kabine
+        team:
+            team,
+
+        datum:
+            datum,
+
+        start:
+            start,
+
+        ende:
+            ende,
+
+        platz:
+            platz,
+
+        kabine:
+            kabine,
+
+        status:
+            status
 
     });
 
-    renderReservierungen();
+    saveAppData();
 
-    initDashboard();
-    renderPlaetze();
-    renderKabinen();
+    refreshAll();
+
+}
+
+function reservierungLoeschen(id) {
+
+    const bestaetigung =
+        confirm(
+            "Reservierung löschen?"
+        );
+
+    if (
+        !bestaetigung
+    ) {
+
+        return;
+
+    }
+
+    APPDATA.reservierungen =
+        APPDATA.reservierungen.filter(
+            r => r.id !== id
+        );
+
+    saveAppData();
+
+    refreshAll();
+
 }
