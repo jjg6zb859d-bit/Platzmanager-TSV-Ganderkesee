@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TSV PlatzManager V0.9</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+
+⚽ TSV Ganderkesee
+
+</div>
+
+<nav>
+
+<button onclick="showPage('dashboard')">
+Dashboard
+</button>
+
+<button onclick="showPage('plaetze')">
+Plätze
+</button>
+
+<button onclick="showPage('kabinen')">
+Kabinen
+</button>
+
+<button onclick="showPage('teams')">
+Teams
+</button>
+
+<button onclick="showPage('admin')">
+Verwaltung
+</button>
+
+</nav>
+
+</header>
+
+<main>
+
+<section id="dashboard" class="page active">
+
+<h2>Dashboard</h2>
+
+<div id="dashboardContent"></div>
+
+</section>
+
+<section id="plaetze" class="page">
+
+<h2>Platzbelegung</h2>
+
+<div id="platzMatrix"></div>
+
+</section>
+
+<section id="kabinen" class="page">
+
+<h2>Kabinenbelegung</h2>
+
+<div id="kabinenMatrix"></div>
+
+</section>
+
+<section id="teams" class="page">
+
+<h2>Teams</h2>
+
+<div id="teamContent"></div>
+
+</section>
+
+<section id="admin" class="page">
+
+<h2>Verwaltung</h2>
+
+<div id="adminContent"></div>
+
+</section>
+
+</main>
+
+<script src="modules/storage.js"></script>
+<script src="modules/dashboard.js"></script>
+<script src="modules/plaetze.js"></script>
+<script src="modules/kabinen.js"></script>
+<script src="modules/teams.js"></script>
+<script src="modules/admin.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
