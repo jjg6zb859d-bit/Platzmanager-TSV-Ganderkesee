@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TSV PlatzManager V0.9</title>
+<title>TSV Ganderkesee PlatzManager</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -14,52 +15,18 @@
 <body>
 
 <header>
-  <div class="hero">
 
-<h1>
-⚽ TSV Ganderkesee
-</h1>
-
-<p>
-
-Digitaler Platz- und
-Kabinenbelegungsplan
-
-</p>
-
-<div class="hero-grid">
-
-<div class="hero-card">
-
-⚽ Plätze
-
-</div>
-
-<div class="hero-card">
-
-🚪 Kabinen
-
-</div>
-
-<div class="hero-card">
-
-👥 Teams
-
-</div>
-
-<div class="hero-card">
-
-📅 Reservierungen
-
-</div>
-
-</div>
-
-</div>
+<div class="header-inner">
 
 <div class="logo">
 
 ⚽ TSV Ganderkesee
+
+</div>
+
+<div class="subtitle">
+
+Digitaler Platz- und Kabinenbelegungsplan
 
 </div>
 
@@ -81,19 +48,51 @@ Kabinen
 Teams
 </button>
 
-<button onclick="showPage('admin')">
-Verwaltung
+<button onclick="showPage('reservierungen')">
+Reservierungen
 </button>
 
 </nav>
 
+</div>
+
 </header>
+
+<section class="hero">
+
+<h1>TSV Ganderkesee</h1>
+
+<p>
+
+PlatzManager V0.9.4
+
+</p>
+
+<div class="hero-grid">
+
+<div class="hero-card">
+⚽ Plätze
+</div>
+
+<div class="hero-card">
+🚪 Kabinen
+</div>
+
+<div class="hero-card">
+👥 Teams
+</div>
+
+<div class="hero-card">
+📅 Reservierungen
+</div>
+
+</div>
+
+</section>
 
 <main>
 
 <section id="dashboard" class="page active">
-
-<h2>Dashboard</h2>
 
 <div id="dashboardContent"></div>
 
@@ -101,15 +100,11 @@ Verwaltung
 
 <section id="plaetze" class="page">
 
-<h2>Platzbelegung</h2>
-
 <div id="platzMatrix"></div>
 
 </section>
 
 <section id="kabinen" class="page">
-
-<h2>Kabinenbelegung</h2>
 
 <div id="kabinenMatrix"></div>
 
@@ -117,17 +112,13 @@ Verwaltung
 
 <section id="teams" class="page">
 
-<h2>Teams</h2>
-
 <div id="teamContent"></div>
 
 </section>
 
-<section id="admin" class="page">
+<section id="reservierungen" class="page">
 
-<h2>Verwaltung</h2>
-
-<div id="adminContent"></div>
+<div id="reservierungContent"></div>
 
 </section>
 
@@ -138,10 +129,10 @@ Verwaltung
 <script src="modules/plaetze.js"></script>
 <script src="modules/kabinen.js"></script>
 <script src="modules/teams.js"></script>
-<script src="modules/admin.js"></script>
 <script src="modules/reservierungen.js"></script>
+
 <script src="app.js"></script>
 
 </body>
-</html>
 
+</html>
