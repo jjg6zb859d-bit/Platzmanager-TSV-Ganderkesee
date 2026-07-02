@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TSV PlatzManager V0.3</title>
+<title>TSV PlatzManager V0.4</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -73,49 +73,51 @@
 
 <option>K1 Links</option>
 <option>K1 Rechts</option>
-
 <option>K2 Links</option>
 <option>K2 Rechts</option>
-
 <option>K3 Links</option>
 <option>K3 Rechts</option>
-
 <option>K4 Links</option>
 <option>K4 Rechts</option>
-
 <option>K5 Links</option>
 <option>K5 Rechts</option>
-
 <option>K6 Links</option>
 <option>K6 Rechts</option>
-
 <option>K7 Links</option>
 <option>K7 Rechts</option>
-
 <option>K8 Links</option>
 <option>K8 Rechts</option>
 
 </select>
 
 <button onclick="speichern()">
-
 Reservierung speichern
-
 </button>
 
 </div>
 
 <div class="card">
 
-<h2>Tagesfilter</h2>
+<h2>Datum filtern</h2>
 
-<input type="date" id="filterDatum" onchange="anzeigen()">
+<input
+type="date"
+id="filterDatum"
+onchange="anzeigen()">
 
 </div>
 
 <div class="card">
 
-<h2>Platzbelegungsplan</h2>
+<h2>Wochenübersicht</h2>
+
+<div id="wochenplan"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Belegungen</h2>
 
 <div id="liste"></div>
 
@@ -126,12 +128,12 @@ Reservierung speichern
 <script src="app.js"></script>
 
 </body>
-
 </html>
 ⚽ TSV Ganderkesee
 Digitaler Platz- und Kabinenbelegungsplan
 
 Dashboard
 Neue Reservierung
-Tagesfilter
-Platzbelegungsplan
+Datum filtern
+Wochenübersicht
+Belegungen
