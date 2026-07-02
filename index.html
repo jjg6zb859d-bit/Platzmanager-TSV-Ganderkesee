@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TSV PlatzManager V0.5</title>
+<title>TSV PlatzManager V0.6</title>
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,10 +14,31 @@
 
 <header>
     <h1>⚽ TSV Ganderkesee</h1>
-    <p>Digitaler Platz- und Kabinenbelegungsplan V0.5</p>
+    <p>Digitaler Platz- und Kabinenbelegungsplan V0.6</p>
 </header>
 
 <main class="container">
+
+    <section class="card admin-card">
+        <h2>Benutzersteuerung</h2>
+
+        <div id="rollenAnzeige" class="rollen-anzeige">
+            Aktueller Modus: Trainer
+        </div>
+
+        <input
+            type="password"
+            id="adminPin"
+            placeholder="Admin-PIN eingeben">
+
+        <button onclick="adminLogin()">
+            Admin-Modus aktivieren
+        </button>
+
+        <button class="secondary" onclick="trainerModus()">
+            Zurück zum Trainer-Modus
+        </button>
+    </section>
 
     <section class="card">
         <h2>Dashboard</h2>
@@ -44,6 +65,19 @@
 
         <label>Kabine</label>
         <select id="kabine"></select>
+
+        <label>Status</label>
+        <select id="status">
+            <option>Entwurf</option>
+            <option>Reserviert</option>
+            <option>Freigegeben</option>
+            <option>Gesperrt</option>
+        </select>
+
+        <label>Notiz</label>
+        <textarea
+            id="notiz"
+            placeholder="z. B. Testspiel, Platzpflege, Turnier, Gastmannschaft"></textarea>
 
         <button onclick="speichern()">
             Reservierung speichern
