@@ -1,135 +1,38 @@
-function initReservierungen() {
-    renderReservierungen();
-}
+function initReservierungen(){
 
-function renderReservierungen() {
+const div =
+document.getElementById(
+"reservierungContent"
+);
 
-    const div =
-        document.getElementById("adminContent");
+div.innerHTML = `
 
-    let html = `
-    <div class="card">
+<div class="card">
 
-        <h3>Neue Reservierung</h3>
+<h3>Neue Reservierung</h3>
 
-        <select id="resTeam">
-            ${APPDATA.teams.map(team =>
-                `<option>${team.name}</option>`
-            ).join("")}
-        </select>
+<select>
 
-        <input
-            type="date"
-            id="resDatum">
+<option>D1</option>
 
-        <input
-            type="time"
-            id="resStart">
+<option>C1</option>
 
-        <input
-            type="time"
-            id="resEnde">
+</select>
 
-        <select id="resPlatz">
-            ${APPDATA.plaetze.map(platz =>
-                `<option>${platz.name}</option>`
-            ).join("")}
-        </select>
+<input type="date">
 
-        <select id="resKabine">
-            ${APPDATA.kabinen.map(kabine =>
-                `<option>${kabine.name}</option>`
-            ).join("")}
-        </select>
+<input type="time">
 
-        <button onclick="reservierungSpeichern()">
-            Reservierung speichern
-        </button>
+<input type="time">
 
-    </div>
+<button>
 
-    <div class="card">
-        <h3>Reservierungen</h3>
-    `;
+Reservieren
 
-    APPDATA.reservierungen.forEach(r => {
+</button>
 
-        html += `
-        <div class="card">
+</div>
 
-            <strong>${r.team}</strong>
+`;
 
-            <br>
-
-            📅 ${r.datum}
-
-            <br>
-
-            ⏰ ${r.start} - ${r.ende}
-
-            <br>
-
-            ⚽ ${r.platz}
-
-            <br>
-
-            🚪 ${r.kabine}
-
-        </div>
-        `;
-
-    });
-
-    html += `</div>`;
-
-    div.innerHTML = html;
-}
-
-function reservierungSpeichern() {
-
-    const team =
-        document.getElementById("resTeam").value;
-
-    const datum =
-        document.getElementById("resDatum").value;
-
-    const start =
-        document.getElementById("resStart").value;
-
-    const ende =
-        document.getElementById("resEnde").value;
-
-    const platz =
-        document.getElementById("resPlatz").value;
-
-    const kabine =
-        document.getElementById("resKabine").value;
-
-    if (!datum || !start || !ende) {
-
-        alert("Bitte Datum und Uhrzeit auswählen");
-
-        return;
-    }
-
-    APPDATA.reservierungen.push({
-
-        id: neueID(),
-
-        team,
-        datum,
-        start,
-        ende,
-        platz,
-        kabine
-
-    });
-
-    speichern();
-
-    renderReservierungen();
-
-    initDashboard();
-    renderPlaetze();
-    renderKabinen();
 }
