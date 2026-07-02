@@ -1,51 +1,31 @@
-function initKabinen() {
-    renderKabinen();
-}
+function initKabinen(){
 
-function renderKabinen() {
+const div =
+document.getElementById(
+"kabinenMatrix"
+);
 
-    const div =
-        document.getElementById("kabinenMatrix");
+let html =
+'<div class="grid">';
 
-    let html =
-        '<div class="grid">';
+APPDATA.kabinen.forEach(k=>{
 
-    APPDATA.kabinen.forEach(kabine => {
+html += `
 
-        const belegt =
-            APPDATA.reservierungen.filter(
-                r => r.kabine === kabine.name
-            );
+<div class="card frei">
 
-        let status = "frei";
-        let css = "status-frei";
+<h3>${k.name}</h3>
 
-        if (belegt.length > 0) {
+frei
 
-            status =
-                `${belegt.length} Belegung(en)`;
+</div>
 
-            css =
-                "status-belegt";
-        }
+`;
 
-        html += `
+});
 
-        <div class="card ${css}">
+html += '</div>';
 
-            <h3>
-                ${kabine.name}
-            </h3>
+div.innerHTML = html;
 
-            <strong>${status}</strong>
-
-        </div>
-
-        `;
-    });
-
-    html += "</div>";
-
-    div.innerHTML =
-        html;
 }
