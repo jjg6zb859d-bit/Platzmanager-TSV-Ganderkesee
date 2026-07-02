@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TSV PlatzManager V0.7</title>
+<title>TSV PlatzManager V0.8</title>
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,7 @@
 
 <header>
     <h1>⚽ TSV Ganderkesee</h1>
-    <p>Digitaler Platz- und Kabinenbelegungsplan V0.7</p>
+    <p>Digitaler Platz- und Kabinenbelegungsplan V0.8</p>
 </header>
 
 <main class="container">
@@ -89,6 +89,35 @@
     </section>
 
     <section class="card">
+        <h2>Team- und Trainerdatenbank</h2>
+
+        <div class="hinweis">
+            Teams können nur im Admin-Modus angelegt oder gelöscht werden.
+        </div>
+
+        <label>Teamname</label>
+        <input type="text" id="teamName" placeholder="z. B. D1, C2, U13, Herren">
+
+        <label>Trainer</label>
+        <input type="text" id="teamTrainer" placeholder="Name des Trainers">
+
+        <label>Mobilnummer</label>
+        <input type="text" id="teamMobil" placeholder="z. B. 0176 12345678">
+
+        <label>E-Mail</label>
+        <input type="email" id="teamEmail" placeholder="trainer@mail.de">
+
+        <label>Teamfarbe</label>
+        <input type="color" id="teamFarbe" value="#0054A6">
+
+        <button onclick="teamHinzufuegen()">
+            Team hinzufügen
+        </button>
+
+        <div id="teamListe"></div>
+    </section>
+
+    <section class="card">
         <h2>Tagesansicht / Platzmatrix</h2>
 
         <label>Tag auswählen</label>
@@ -139,7 +168,7 @@
         <input type="file" id="importDatei" accept=".json" onchange="importJSON(event)">
 
         <button class="danger" onclick="alleDatenLoeschen()">
-            Alle Daten löschen
+            Alle Reservierungen löschen
         </button>
     </section>
 
