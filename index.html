@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TSV PlatzManager V0.5</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>⚽ TSV Ganderkesee</h1>
+    <p>Digitaler Platz- und Kabinenbelegungsplan V0.5</p>
+</header>
+
+<main class="container">
+
+    <section class="card">
+        <h2>Dashboard</h2>
+        <div id="dashboard"></div>
+    </section>
+
+    <section class="card">
+        <h2>Neue Reservierung</h2>
+
+        <label>Datum</label>
+        <input type="date" id="datum">
+
+        <label>Startzeit</label>
+        <input type="time" id="start">
+
+        <label>Endzeit</label>
+        <input type="time" id="ende">
+
+        <label>Team</label>
+        <select id="team"></select>
+
+        <label>Platzbereich</label>
+        <select id="platz"></select>
+
+        <label>Kabine</label>
+        <select id="kabine"></select>
+
+        <button onclick="speichern()">
+            Reservierung speichern
+        </button>
+    </section>
+
+    <section class="card">
+        <h2>Wochenansicht</h2>
+
+        <label>Woche auswählen</label>
+        <input type="date" id="wochenDatum" onchange="aktualisieren()">
+
+        <div id="wochenplan" class="wochenplan"></div>
+    </section>
+
+    <section class="card">
+        <h2>Alle Reservierungen</h2>
+        <div id="liste"></div>
+    </section>
+
+    <section class="card">
+        <h2>Daten sichern / wiederherstellen</h2>
+
+        <button onclick="exportJSON()">
+            JSON Backup exportieren
+        </button>
+
+        <input type="file" id="importDatei" accept=".json" onchange="importJSON(event)">
+
+        <button class="danger" onclick="alleDatenLoeschen()">
+            Alle Daten löschen
+        </button>
+    </section>
+
+</main>
+
+<script src="app.js"></script>
+
+</body>
+</html>
