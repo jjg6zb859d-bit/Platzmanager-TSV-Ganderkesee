@@ -5,6 +5,7 @@ localStorage.getItem("reservierungen")
 
 anzeigen();
 dashboard();
+wochenplan();
 
 function speichern(){
 
@@ -29,10 +30,11 @@ document.getElementById("kabine").value;
 if(!datum || !start || !ende){
 
 alert(
-"Datum und Uhrzeit auswählen"
+"Datum und Uhrzeit auswählen."
 );
 
 return;
+
 }
 
 const konflikt =
@@ -52,11 +54,12 @@ if(konflikt){
 alert(
 "Konflikt erkannt!\n\n" +
 konflikt.team +
-" nutzt bereits\n" +
+"\n" +
 konflikt.platz
 );
 
 return;
+
 }
 
 reservierungen.push({
@@ -77,6 +80,8 @@ JSON.stringify(reservierungen)
 
 anzeigen();
 dashboard();
+wochenplan();
+
 }
 
 function anzeigen(){
@@ -89,8 +94,7 @@ document.getElementById("filterDatum").value;
 
 liste.innerHTML = "";
 
-let daten =
-reservierungen;
+let daten = reservierungen;
 
 if(filter){
 
@@ -101,34 +105,23 @@ r => r.datum === filter
 
 }
 
-daten.sort((a,b)=>{
-
-if(a.datum < b.datum) return -1;
-if(a.datum > b.datum) return 1;
-
-return 0;
-
-});
+daten.sort(
+(a,b)=>
+a.datum.localeCompare(b.datum)
+);
 
 daten.forEach((r,index)=>{
 
-let cssKlasse="team-d1";
+let klasse = "team-d1";
 
-if(r.team==="D2")
-cssKlasse="team-d2";
-
-if(r.team==="C1")
-cssKlasse="team-c1";
-
-if(r.team==="C2")
-cssKlasse="team-c2";
-
-if(r.team==="Herren")
-cssKlasse="team-herren";
+if(r.team==="D2") klasse="team-d2";
+if(r.team==="C1") klasse="team-c1";
+if(r.team==="C2") klasse="team-c2";
+if(r.team==="Herren") klasse="team-herren";
 
 liste.innerHTML +=
 
-`<div class="eintrag ${cssKlasse}">
+`<div class="eintrag ${klasse}">
 
 <strong>${r.team}</strong>
 
@@ -166,24 +159,20 @@ Löschen
 
 function dashboard(){
 
-const dashboard =
-document.getElementById("dashboard");
-
-const anzahl =
-reservierungen.length;
-
-dashboard.innerHTML =
+document.getElementById(
+"dashboard"
+).innerHTML =
 
 `<div class="dashboard-box">
 
-📋 Reservierungen gesamt:
-<strong>${anzahl}</strong>
+📋 Reservierungen:
+<strong>${reservierungen.length}</strong>
 
 </div>
 
 <div class="dashboard-box">
 
-⚽ Plätze im System:
+⚽ Plätze:
 <strong>9</strong>
 
 </div>
@@ -194,18 +183,64 @@ dashboard.innerHTML =
 <strong>16</strong>
 
 </div>`;
+
+}
+
+function wochenplan(){
+
+const container =
+document.getElementById(
+"wochenplan"
+);
+
+container.innerHTML = "";
+
+const tage = [
+"Montag",
+"Dienstag",
+"Mittwoch",
+"Donnerstag",
+"Freitag",
+"Samstag",
+"Sonntag"
+];
+
+tage.forEach(tag=>{
+
+container.innerHTML +=
+
+`<div class="tag">
+
+<h3>${tag}</h3>
+
+<div class="tag-eintrag">
+
+Noch keine Termine
+
+</div>
+
+</div>`;
+
+});
+
 }
 
 function loeschen(index){
 
-reservierungen.splice(index,1);
+reservierungen.splice(
+index,
+1
+);
 
 localStorage.setItem(
 "reservierungen",
-JSON.stringify(reservierungen)
+JSON.stringify(
+reservierungen
+)
 );
 
 anzeigen();
 dashboard();
+wochenplan();
 
 }
