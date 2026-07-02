@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TSV PlatzManager</title>
+<title>TSV PlatzManager V0.3</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -23,6 +23,14 @@
 </header>
 
 <div class="container">
+
+<div class="card">
+
+<h2>Dashboard</h2>
+
+<div id="dashboard"></div>
+
+</div>
 
 <div class="card">
 
@@ -99,7 +107,15 @@ Reservierung speichern
 
 <div class="card">
 
-<h2>Reservierungen</h2>
+<h2>Tagesfilter</h2>
+
+<input type="date" id="filterDatum" onchange="anzeigen()">
+
+</div>
+
+<div class="card">
+
+<h2>Platzbelegungsplan</h2>
 
 <div id="liste"></div>
 
