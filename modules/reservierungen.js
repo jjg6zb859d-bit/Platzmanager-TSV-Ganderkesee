@@ -119,5 +119,115 @@ function renderReservierungen() {
 
     div.innerHTML = html;
 
+   function reservierungSpeichern() {
+
+    const team =
+        document.getElementById(
+            "resTeam"
+        ).value;
+
+    const datum =
+        document.getElementById(
+            "resDatum"
+        ).value;
+
+    const start =
+        document.getElementById(
+            "resStart"
+        ).value;
+
+    const ende =
+        document.getElementById(
+            "resEnde"
+        ).value;
+
+    const platz =
+        document.getElementById(
+            "resPlatz"
+        ).value;
+
+    const kabine =
+        document.getElementById(
+            "resKabine"
+        ).value;
+
+    if (
+        !datum ||
+        !start ||
+        !ende
+    ) {
+
+        alert(
+            "Datum und Uhrzeit auswählen"
+        );
+
+        return;
+    }
+
+    const konflikt =
+        APPDATA.reservierungen.find(r => {
+
+            const gleicherTag =
+                r.datum === datum;
+
+            const zeitKonflikt =
+                start < r.ende &&
+                ende > r.start;
+
+            const platzKonflikt =
+                r.platz === platz;
+
+            const kabinenKonflikt =
+                r.kabine === kabine;
+
+            return (
+                gleicherTag &&
+                zeitKonflikt &&
+                (
+                    platzKonflikt ||
+                    kabinenKonflikt
+                )
+            );
+
+        });
+
+    if (konflikt) {
+
+        alert(
+            "Konflikt erkannt!\n\n" +
+            konflikt.team +
+            "\n" +
+            konflikt.platz +
+            "\n" +
+            konflikt.start +
+            " - " +
+            konflikt.ende
+        );
+
+        return;
+    }
+
+    APPDATA.reservierungen.push({
+
+        id: Date.now(),
+
+        team,
+        datum,
+        start,
+        ende,
+        platz,
+        kabine
+
+    });
+
+    renderReservierungen();
+
+    initDashboard();
+
+    renderPlaetze();
+
+    renderKabinen();
+} 
+
 }
 ``
