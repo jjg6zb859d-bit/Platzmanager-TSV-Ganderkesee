@@ -117,4 +117,69 @@ function renderReservierungen(){
     div.innerHTML = html;
 
 }
-`
+function reservierungSpeichern(){
+
+    const team =
+    document.getElementById(
+        "resTeam"
+    ).value;
+
+    const datum =
+    document.getElementById(
+        "resDatum"
+    ).value;
+
+    const start =
+    document.getElementById(
+        "resStart"
+    ).value;
+
+    const ende =
+    document.getElementById(
+        "resEnde"
+    ).value;
+
+    const platz =
+    document.getElementById(
+        "resPlatz"
+    ).value;
+
+    const kabine =
+    document.getElementById(
+        "resKabine"
+    ).value;
+
+    if(
+        !datum ||
+        !start ||
+        !ende
+    ){
+
+        alert(
+            "Datum und Zeit wählen"
+        );
+
+        return;
+    }
+
+    APPDATA.reservierungen.push({
+
+        id:
+        neueID(),
+
+        team,
+        datum,
+        start,
+        ende,
+        platz,
+        kabine
+
+    });
+
+    speichern();
+
+    renderReservierungen();
+
+    initDashboard();
+
+}`
