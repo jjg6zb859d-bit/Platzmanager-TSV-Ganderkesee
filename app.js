@@ -5,86 +5,66 @@ localStorage.getItem("reservierungen")
 
 anzeigen();
 
-function speichern(){
+function speichern() {
 
-    const datum =
-    document.getElementById("datum").value;
+const datum =
+document.getElementById("datum").value;
 
-    const start =
-    document.getElementById("start").value;
+const start =
+document.getElementById("start").value;
 
-    const ende =
-    document.getElementById("ende").value;
+const ende =
+document.getElementById("ende").value;
 
-    const team =
-    document.getElementById("team").value;
+const team =
+document.getElementById("team").value;
 
-    const platz =
-    document.getElementById("platz").value;
+const platz =
+document.getElementById("platz").value;
 
-    const kabine =
-    document.getElementById("kabine").value;
+const kabine =
+document.getElementById("kabine").value;
 
-    if(!datum || !start || !ende){
+if (!datum || !start || !ende) {
 
-        alert("Datum und Uhrzeit wählen");
+alert(
+"Bitte Datum und Uhrzeiten auswählen."
+);
 
-        return;
-    }
+return;
 
-    const konflikt =
-    reservierungen.find(r =>
-
-        r.datum === datum &&
-
-        (
-            r.platz === platz ||
-            r.kabine === kabine ||
-            r.team === team
-        )
-
-    );
-
-    if(konflikt){
-
-        alert(
-            "Konflikt erkannt:\n" +
-            konflikt.team +
-            " hat bereits eine Reservierung."
-        );
-
-        return;
-    }
-
-    reservierungen.push({
-
-        datum,
-        start,
-        ende,
-        team,
-        platz,
-        kabine
-
-    });
-
-    localStorage.setItem(
-        "reservierungen",
-        JSON.stringify(reservierungen)
-    );
-
-    anzeigen();
 }
 
-function anzeigen(){
+reservierungen.push({
 
-    const liste =
-    document.getElementById("liste");
+datum,
+start,
+ende,
+team,
+platz,
+kabine
 
-    liste.innerHTML = "";
+});
 
-    reservierungen.forEach((r,index)=>{
+localStorage.setItem(
+"reservierungen",
+JSON.stringify(reservierungen)
+);
 
-        liste.innerHTML += `
+anzeigen();
+
+}
+
+function anzeigen() {
+
+const liste =
+document.getElementById("liste");
+
+liste.innerHTML = "";
+
+reservierungen.forEach((r,index) => {
+
+liste.innerHTML += `
 
 <div class="eintrag">
 
@@ -118,17 +98,22 @@ Löschen
 
 `;
 
-    });
+});
+
 }
 
 function loeschen(index){
 
-    reservierungen.splice(index,1);
+reservierungen.splice(index,1);
 
-    localStorage.setItem(
-        "reservierungen",
-        JSON.stringify(reservierungen)
-    );
+localStorage.setItem(
 
-    anzeigen();
+"reservierungen",
+
+JSON.stringify(reservierungen)
+
+);
+
+anzeigen();
+
 }
