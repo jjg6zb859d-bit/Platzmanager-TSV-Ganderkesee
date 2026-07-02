@@ -1,31 +1,78 @@
-function initPlaetze(){
+function initPlaetze() {
 
-const div =
-document.getElementById(
-"platzMatrix"
-);
+    renderPlaetze();
 
-let html =
-'<div class="grid">';
+}
 
-APPDATA.plaetze.forEach(p=>{
+function renderPlaetze() {
 
-html += `
+    const div =
+        document.getElementById(
+            "platzMatrix"
+        );
 
-<div class="card frei">
+    let html =
+        '<div class="grid">';
 
-<h3>${p.name}</h3>
+    APPDATA.plaetze.forEach(platz => {
 
-frei
+        const belegung =
+            APPDATA.reservierungen.filter(
+                r => r.platz === platz.name
+            );
 
-</div>
+        let css = "frei";
 
-`;
+        if (belegung.length > 0) {
 
-});
+            css = "belegt";
 
-html += '</div>';
+        }
 
-div.innerHTML = html;
+        html += `
+
+        <div class="card ${css}">
+
+            <h3>
+
+                ${platz.name}
+
+            </h3>
+
+        `;
+
+        if (belegung.length === 0) {
+
+            html += `FREI`;
+
+        } else {
+
+            belegung.forEach(b => {
+
+                html += `
+
+                <strong>
+                ${b.team}
+                </strong>
+
+                <br>
+
+                ${b.start} - ${b.ende}
+
+                <br><br>
+
+                `;
+
+            });
+
+        }
+
+        html += `</div>`;
+
+    });
+
+    html += '</div>';
+
+    div.innerHTML = html;
 
 }
