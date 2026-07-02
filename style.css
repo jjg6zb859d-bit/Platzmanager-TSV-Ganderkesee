@@ -99,6 +99,14 @@ button.danger:hover {
     display: none;
 }
 
+.hinweis {
+    background: #fff8e1;
+    border-left: 5px solid #FFC107;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -155,30 +163,6 @@ button.danger:hover {
     font-weight: bold;
     background: rgba(255,255,255,0.25);
     margin-bottom: 6px;
-}
-
-.team-d1 {
-    background: #0054A6;
-}
-
-.team-d2 {
-    background: #009688;
-}
-
-.team-c1 {
-    background: #E53935;
-}
-
-.team-c2 {
-    background: #8E24AA;
-}
-
-.team-herren {
-    background: #43A047;
-}
-
-.team-standard {
-    background: #546E7A;
 }
 
 .status-entwurf {
@@ -296,6 +280,23 @@ button.danger:hover {
     padding: 7px;
     margin-bottom: 7px;
     font-size: 13px;
+}
+
+.team-card {
+    background: #f8f9fb;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-left: 8px solid #0054A6;
+}
+
+.team-card strong {
+    font-size: 18px;
+}
+
+.team-meta {
+    font-size: 14px;
+    margin-top: 4px;
 }
 
 @media (max-width: 1000px) {
