@@ -3,26 +3,41 @@ const ADMIN_PIN = "1892";
 let istAdmin = false;
 let bearbeitungsId = null;
 
-const teams = [
+const standardTeams = [
     {
         name: "D1",
-        klasse: "team-d1"
+        trainer: "Niels",
+        mobil: "",
+        email: "",
+        farbe: "#0054A6"
     },
     {
         name: "D2",
-        klasse: "team-d2"
+        trainer: "",
+        mobil: "",
+        email: "",
+        farbe: "#009688"
     },
     {
         name: "C1",
-        klasse: "team-c1"
+        trainer: "",
+        mobil: "",
+        email: "",
+        farbe: "#E53935"
     },
     {
         name: "C2",
-        klasse: "team-c2"
+        trainer: "",
+        mobil: "",
+        email: "",
+        farbe: "#8E24AA"
     },
     {
         name: "Herren",
-        klasse: "team-herren"
+        trainer: "",
+        mobil: "",
+        email: "",
+        farbe: "#43A047"
     }
 ];
 
@@ -57,6 +72,9 @@ const kabinen = [
     "K8 Rechts"
 ];
 
+let teams =
+JSON.parse(localStorage.getItem("teams")) || standardTeams;
+
 let reservierungen =
 JSON.parse(localStorage.getItem("reservierungen")) || [];
 
@@ -81,8 +99,8 @@ function selectFelderFuellen() {
     filterTeam.innerHTML = "<option>Alle Teams</option>";
 
     teams.forEach(team => {
-        teamSelect.innerHTML += `<option>${team.name}</option>`;
-        filterTeam.innerHTML += `<option>${team.name}</option>`;
+        teamSelect.innerHTML += `<option>${textSicher(team.name)}</option>`;
+        filterTeam.innerHTML += `<option>${textSicher(team.name)}</option>`;
     });
 
     plaetze.forEach(platz => {
@@ -196,14 +214,14 @@ function speichern() {
             if (r.id === bearbeitungsId) {
                 return {
                     id: r.id,
-                    datum: datum,
-                    start: start,
-                    ende: ende,
-                    team: team,
-                    platz: platz,
-                    kabine: kabine,
-                    status: status,
-                    notiz: notiz
+                    datum,
+                    start,
+                    ende,
+                    team,
+                    platz,
+                    kabine,
+                    status,
+                    notiz
                 };
             }
 
@@ -212,19 +230,18 @@ function speichern() {
 
         bearbeitungAbbrechen(false);
     } else {
-        const neueReservierung = {
+        reservierungen.push({
             id: Date.now(),
-            datum: datum,
-            start: start,
-            ende: ende,
-            team: team,
-            platz: platz,
-            kabine: kabine,
-            status: status,
-            notiz: notiz
-        };
+            datum,
+            start,
+            ende,
+            team,
+            platz,
+            kabine,
+            status,
+            notiz
+        });
 
-        reservierungen.push(neueReservierung);
         formularZuruecksetzen();
     }
 
@@ -240,51 +257,39 @@ function formularZuruecksetzen() {
 }
 
 function speichernLocalStorage() {
-    localStorage.setItem(
-        "reservierungen",
-        JSON.stringify(reservierungen)
-    );
+    localStorage.setItem("reservierungen", JSON.stringify(reservierungen));
+    localStorage.setItem("teams", JSON.stringify(teams));
 }
 
 function aktualisieren() {
+    selectFelderFuellen();
     dashboard();
     anzeigen();
     wochenplan();
     tagesplan();
+    teamListeAnzeigen();
 }
 
 function dashboard() {
     const dashboard = document.getElementById("dashboard");
 
     const gesamt = reservierungen.length;
-
-    const entwurf = reservierungen.filter(
-        r => r.status === "Entwurf"
-    ).length;
-
-    const reserviert = reservierungen.filter(
-        r => r.status === "Reserviert"
-    ).length;
-
-    const freigegeben = reservierungen.filter(
-        r => r.status === "Freigegeben"
-    ).length;
-
-    const gesperrt = reservierungen.filter(
-        r => r.status === "Gesperrt"
-    ).length;
+    const entwurf = reservierungen.filter(r => r.status === "Entwurf").length;
+    const reserviert = reservierungen.filter(r => r.status === "Reserviert").length;
+    const freigegeben = reservierungen.filter(r => r.status === "Freigegeben").length;
+    const gesperrt = reservierungen.filter(r => r.status === "Gesperrt").length;
 
     dashboard.innerHTML = `
         <div class="dashboard-grid">
 
             <div class="dashboard-box">
-                📋 Gesamt
-                <strong>${gesamt}</strong>
+                👥 Teams
+                <strong>${teams.length}</strong>
             </div>
 
             <div class="dashboard-box">
-                🟡 Entwürfe
-                <strong>${entwurf}</strong>
+                📋 Gesamt
+                <strong>${gesamt}</strong>
             </div>
 
             <div class="dashboard-box">
@@ -304,6 +309,120 @@ function dashboard() {
 
         </div>
     `;
+}
+
+function teamHinzufuegen() {
+    if (!istAdmin) {
+        alert("Teams können nur im Admin-Modus angelegt werden.");
+        return;
+    }
+
+    const name = document.getElementById("teamName").value.trim();
+    const trainer = document.getElementById("teamTrainer").value.trim();
+    const mobil = document.getElementById("teamMobil").value.trim();
+    const email = document.getElementById("teamEmail").value.trim();
+    const farbe = document.getElementById("teamFarbe").value;
+
+    if (!name) {
+        alert("Bitte Teamnamen eingeben.");
+        return;
+    }
+
+    const existiert = teams.find(
+        t => t.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (existiert) {
+        alert("Dieses Team existiert bereits.");
+        return;
+    }
+
+    teams.push({
+        name,
+        trainer,
+        mobil,
+        email,
+        farbe
+    });
+
+    document.getElementById("teamName").value = "";
+    document.getElementById("teamTrainer").value = "";
+    document.getElementById("teamMobil").value = "";
+    document.getElementById("teamEmail").value = "";
+    document.getElementById("teamFarbe").value = "#0054A6";
+
+    speichernLocalStorage();
+    aktualisieren();
+}
+
+function teamListeAnzeigen() {
+    const container = document.getElementById("teamListe");
+
+    container.innerHTML = "";
+
+    if (teams.length === 0) {
+        container.innerHTML = `<div class="leer">Noch keine Teams angelegt.</div>`;
+        return;
+    }
+
+    teams.forEach(team => {
+        let loeschButton = "";
+
+        if (istAdmin) {
+            loeschButton = `
+                <button class="danger" onclick="teamLoeschen('${textAttribut(team.name)}')">
+                    Team löschen
+                </button>
+            `;
+        }
+
+        container.innerHTML += `
+            <div class="team-card" style="border-left-color:${team.farbe}">
+                <strong>${textSicher(team.name)}</strong>
+
+                <div class="team-meta">
+                    👤 Trainer: ${textSicher(team.trainer || "-")}
+                </div>
+
+                <div class="team-meta">
+                    📱 Mobil: ${textSicher(team.mobil || "-")}
+                </div>
+
+                <div class="team-meta">
+                    ✉️ E-Mail: ${textSicher(team.email || "-")}
+                </div>
+
+                ${loeschButton}
+            </div>
+        `;
+    });
+}
+
+function teamLoeschen(name) {
+    if (!istAdmin) {
+        alert("Teams können nur im Admin-Modus gelöscht werden.");
+        return;
+    }
+
+    const wirdGenutzt = reservierungen.some(r => r.team === name);
+
+    if (wirdGenutzt) {
+        alert("Dieses Team hat bereits Reservierungen und kann nicht gelöscht werden.");
+        return;
+    }
+
+    const bestaetigung = confirm(
+        "Team wirklich löschen?"
+    );
+
+    if (!bestaetigung) {
+        return;
+    }
+
+    teams = teams.filter(t => t.name !== name);
+
+    speichernLocalStorage();
+    aktualisieren();
 }
 
 function anzeigen() {
@@ -338,7 +457,7 @@ function anzeigen() {
     }
 
     daten.forEach(r => {
-        const klasse = teamKlasse(r.team);
+        const farbe = teamFarbe(r.team);
         const statusKlasse = statusKlasseErmitteln(r.status);
 
         let adminButtons = "";
@@ -364,13 +483,13 @@ function anzeigen() {
         }
 
         liste.innerHTML += `
-            <div class="eintrag ${klasse} ${statusKlasse}">
+            <div class="eintrag ${statusKlasse}" style="background:${farbe}">
 
                 <span class="status-label">${r.status}</span>
 
                 <br>
 
-                <strong>${r.team}</strong>
+                <strong>${textSicher(r.team)}</strong>
 
                 <br>
 
@@ -472,13 +591,13 @@ function tagesplan() {
             html += `<div class="leer">frei</div>`;
         } else {
             eintraege.forEach(r => {
-                const klasse = teamKlasse(r.team);
+                const farbe = teamFarbe(r.team);
                 const statusKlasse = statusKlasseErmitteln(r.status);
 
                 html += `
-                    <div class="platz-eintrag ${klasse} ${statusKlasse}">
+                    <div class="platz-eintrag ${statusKlasse}" style="background:${farbe}">
                         <span class="status-label">${r.status}</span><br>
-                        <strong>${r.team}</strong><br>
+                        <strong>${textSicher(r.team)}</strong><br>
                         ${r.start} - ${r.ende}<br>
                         🚪 ${r.kabine}
                         ${r.notiz ? `<br>📝 ${textSicher(r.notiz)}` : ""}
@@ -538,13 +657,13 @@ function wochenplan() {
             html += `<div class="leer">frei</div>`;
         } else {
             eintraege.forEach(r => {
-                const klasse = teamKlasse(r.team);
+                const farbe = teamFarbe(r.team);
                 const statusKlasse = statusKlasseErmitteln(r.status);
 
                 html += `
-                    <div class="wochen-eintrag ${klasse} ${statusKlasse}">
+                    <div class="wochen-eintrag ${statusKlasse}" style="background:${farbe}">
                         <span class="status-label">${r.status}</span><br>
-                        <strong>${r.team}</strong><br>
+                        <strong>${textSicher(r.team)}</strong><br>
                         ${r.start} - ${r.ende}<br>
                         ⚽ ${r.platz}<br>
                         🚪 ${r.kabine}
@@ -574,24 +693,20 @@ function loeschen(id) {
         return;
     }
 
-    reservierungen = reservierungen.filter(
-        r => r.id !== id
-    );
+    reservierungen = reservierungen.filter(r => r.id !== id);
 
     speichernLocalStorage();
     aktualisieren();
 }
 
-function teamKlasse(teamName) {
-    const team = teams.find(
-        t => t.name === teamName
-    );
+function teamFarbe(teamName) {
+    const team = teams.find(t => t.name === teamName);
 
-    if (team) {
-        return team.klasse;
+    if (team && team.farbe) {
+        return team.farbe;
     }
 
-    return "team-standard";
+    return "#546E7A";
 }
 
 function statusKlasseErmitteln(status) {
@@ -618,9 +733,7 @@ function montagDerWoche(datum) {
     const tag = datum.getDay();
     const differenz = datum.getDate() - tag + (tag === 0 ? -6 : 1);
 
-    return new Date(
-        datum.setDate(differenz)
-    );
+    return new Date(datum.setDate(differenz));
 }
 
 function datumFormat(datum) {
@@ -640,12 +753,21 @@ function textSicher(text) {
         .replaceAll("'", "&#039;");
 }
 
+function textAttribut(text) {
+    return String(text)
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'")
+        .replaceAll('"', "&quot;");
+}
+
 function exportJSON() {
-    const daten = JSON.stringify(
-        reservierungen,
-        null,
-        2
-    );
+    const backup = {
+        version: "0.8",
+        teams: teams,
+        reservierungen: reservierungen
+    };
+
+    const daten = JSON.stringify(backup, null, 2);
 
     const blob = new Blob(
         [daten],
@@ -659,7 +781,7 @@ function exportJSON() {
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = "platzmanager-backup.json";
+    link.download = "platzmanager-backup-v08.json";
 
     link.click();
 
@@ -679,24 +801,12 @@ function importJSON(event) {
         try {
             const daten = JSON.parse(e.target.result);
 
-            if (!Array.isArray(daten)) {
-                alert("Die Datei enthält kein gültiges Backup.");
-                return;
+            if (Array.isArray(daten)) {
+                reservierungen = daten;
+            } else {
+                reservierungen = daten.reservierungen || [];
+                teams = daten.teams || standardTeams;
             }
-
-            reservierungen = daten.map(eintrag => {
-                return {
-                    id: eintrag.id || Date.now() + Math.floor(Math.random() * 100000),
-                    datum: eintrag.datum || "",
-                    start: eintrag.start || "",
-                    ende: eintrag.ende || "",
-                    team: eintrag.team || "D1",
-                    platz: eintrag.platz || "Hauptplatz A",
-                    kabine: eintrag.kabine || "K1 Links",
-                    status: eintrag.status || "Entwurf",
-                    notiz: eintrag.notiz || ""
-                };
-            });
 
             speichernLocalStorage();
             aktualisieren();
@@ -715,7 +825,7 @@ function importJSON(event) {
 
 function alleDatenLoeschen() {
     if (!istAdmin) {
-        alert("Nur der Admin darf alle Daten löschen.");
+        alert("Nur der Admin darf alle Reservierungen löschen.");
         return;
     }
 
